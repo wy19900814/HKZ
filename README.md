@@ -1,4 +1,4 @@
-HKZ test1
+HKZ
 ===
 Welcome to Healthy Kids Zone Survey App
 
