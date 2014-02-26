@@ -99,23 +99,128 @@ function survey_import($s_id) {
 		exit;
 	if($success)
 	{
-			echo '<pre>Survey1 details: ', HtmlSpecialChars(print_r($surveydetails->data)),'</pre>';
+			//echo '<pre>Survey1 details: ', HtmlSpecialChars(print_r($surveydetails->data)),'</pre>';
 			$page_num = count($surveydetails->data->pages);
 			if ($page_num>3) {
-				echo "Error while importing a survey: more than 3 pages";
+				return "Error while importing a survey: more than 3 pages";
 			} elseif ($page_num<3) {
-				echo "Error while importing a survey: less than 3 pages";
+				return "Error while importing a survey: less than 3 pages";
 			} else {
 				$blocks  = $surveydetails->data->pages[0];
 				$tallies = $surveydetails->data->pages[1];
 				$others  = $surveydetails->data->pages[2];
-				for($i = 0; $i < count($blocks); $i++) {
-					if ((($blocks[$i]->type->subtype != "single_choice") && ($blocks[$i]->type->subtype != "multiple_choice") && ($blocks[$i]->type->subtype != "presentation"))  
-						||  (($blocks[$i]->type->subtype == "presentation") && ($blocks[$i]->type->family != "image"))) {
-						echo "Error while importing a survey: unexpected question type";
+				if ((strtolower($blocks->heading) != "block") || (strtolower($tallies->heading) != "tally") || (strtolower($others->heading) != "other")){
+					return "Error while importing a survey: unexpected page heading";
+				}
+				for($i = 0; $i < count($blocks->questions); $i++) {
+					if (($blocks->questions[$i]->type->family != "single_choice") && ($blocks->questions[$i]->type->family != "multiple_choice")) {
+						return "Error while importing a survey: unexpected question type";
 					}
 				}
-				
+				for($i = 0; $i < count($tallies->questions); $i++) {
+					if (($tallies->questions[$i]->type->family != "presentation") || ($tallies->questions[$i]->type->subtype != "descriptive_text")) {
+						return "Error while importing a survey: unexpected question type";
+					}
+				}
+				for($i = 0; $i < count($others->questions); $i++) {
+					if (($others->questions[$i]->type->family != "single_choice") && ($others->questions[$i]->type->family != "multiple_choice")) {
+						return "Error while importing a survey: unexpected question type";
+					}
+				}
+			}
+			$address="68.178.143.53";
+			$username="uschkz";
+			$password="Team14!hkz";
+			$database="uschkz";
+			$connection=mysql_connect ($address, $username, $password);
+			if (!$connection) {
+			  die('Not connected : ' . mysql_error());
+			}
+			
+			$db_selected = mysql_select_db($database, $connection);
+			if (!$db_selected) {
+			  die ('Can\'t use db : ' . mysql_error());
+			}
+			$s_name = mysql_real_escape_string($surveydetails->data->title->text);
+			$date_created  = mysql_real_escape_string($surveydetails->data->date_created);
+			$date_modified = mysql_real_escape_string($surveydetails->data->date_modified);
+			$num_response  = 0;
+			$num_question  = $surveydetails->data->question_count;
+			$deployed 	   = 0;
+			$query = "insert into Surveys(s_id, s_name, date_created, date_modified, num_response, num_question, deployed) values('$s_id', '$s_name', '$date_created', '$date_modified', '$num_response', '$num_question', '$deployed')";
+			$result = mysql_query($query);
+			if($result === FALSE) {
+	    		die(mysql_error()); 
+			}
+			for($i = 0; $i < count($blocks->questions); $i++) {
+				$query = "select count(*) from Questions";
+				$result = mysql_query($query);
+				if($result === FALSE) {
+		    		die(mysql_error()); 
+				}
+				$info = mysql_fetch_array($result);
+				$q_id = $info[0] + 1;
+				$q_heading = $blocks->questions[$i]->heading;
+				if ($blocks->questions[$i]->type->family == 'single_choice') $q_type = 1;
+				elseif ($blocks->questions[$i]->type->family == 'multiple_choice') $q_type = 2;
+				$query = "insert into Questions(q_id, q_heading, q_type, q_position, s_id) values('$q_id', '$q_heading', '$q_type', '$i', '$s_id')";
+				$result = mysql_query($query);
+				if($result === FALSE) {
+		    		die(mysql_error()); 
+				}
+				$options = $blocks->questions[$i]->answers;
+				for($j = 0; $j < count($options); $j++) {
+					$o_id = $options->position;
+					$o_text = $options->text;
+					$query = "insert into Options(o_id, q_id, o_text) values('$o_id', '$q_id', '$o_text')";
+					$result = mysql_query($query);
+					if($result === FALSE) {
+			    		die(mysql_error()); 
+					}
+				}
+			}
+			for($i = 0; $i < count($tallies->questions); $i++) {
+				$query = "select count(*) from Questions";
+				$result = mysql_query($query);
+				if($result === FALSE) {
+		    		die(mysql_error()); 
+				}
+				$info = mysql_fetch_array($result);
+				$q_id = $info[0] + 1;
+				$q_heading = $tallies->questions[$i]->heading;
+				if (($tallies->questions[$i]->type->family == 'presentation') && ($tallies->questions[$i]->type->subtype == 'descriptive_text')) $q_type = 3;
+				$query = "insert into Questions(q_id, q_heading, q_type, q_position, s_id) values('$q_id', '$q_heading', '$q_type', '$i', '$s_id')";
+				$result = mysql_query($query);
+				if($result === FALSE) {
+		    		die(mysql_error()); 
+				}
+			}
+			for($i = 0; $i < count($others->questions); $i++) {
+				$query = "select count(*) from Questions";
+				$result = mysql_query($query);
+				if($result === FALSE) {
+		    		die(mysql_error()); 
+				}
+				$info = mysql_fetch_array($result);
+				$q_id = $info[0] + 1;
+				$q_heading = $others->questions[$i]->heading;
+				if ($others->questions[$i]->type->family == 'single_choice') $q_type = 1;
+				elseif ($others->questions[$i]->type->family == 'multiple_choice') $q_type = 2;
+				$query = "insert into Questions(q_id, q_heading, q_type, q_position, s_id) values('$q_id', '$q_heading', '$q_type', '$i', '$s_id')";
+				$result = mysql_query($query);
+				if($result === FALSE) {
+		    		die(mysql_error()); 
+				}
+				$options = $others->questions[$i]->answers;
+				for($j = 0; $j < count($options); $j++) {
+					$o_id = $options->position;
+					$o_text = $options->text;
+					$query = "insert into Options(o_id, q_id, o_text) values('$o_id', '$q_id', '$o_text')";
+					$result = mysql_query($query);
+					if($result === FALSE) {
+			    		die(mysql_error()); 
+					}
+				}
 			}
 	}
 	else
