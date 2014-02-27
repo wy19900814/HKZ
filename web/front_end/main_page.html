@@ -29,22 +29,6 @@ $('#tree').dynatree({
         url: "test.json"
        }
 });
-
-     $("#a_school").click(function(){
-      var tree=$("#tree").dynatree("getRoot");
-      tree.addChild({
-          title:$("#sname").val(),isFolder:true, key:"school"
-      });
-        $("#sname").empty();
-
-    });
-
-       $("#d_school").click(function(){
-      var node=$("tree").dynatree("getActiveNode");
-      if(node){
-        node.remove();
-        node.removeChildren();}
-     });
 }) 
 </script>
 <body>
