@@ -56,7 +56,7 @@ function get_SMList() {
 			$result.='"date_modified":"'.$array[$i]->date_modified.'"}';
 		}
 		$result.=']}';
-		echo $result;
+		return $result;
 	}
 	else
 	{
@@ -228,8 +228,60 @@ function survey_import($s_id) {
 		echo HtmlSpecialChars($client->error);
 	}
 }
-function survey_delete($s_id) {
+function get_DBList() {
+	$address="68.178.143.53";
+	$username="uschkz";
+	$password="Team14!hkz";
+	$database="uschkz";
+	$connection=mysql_connect ($address, $username, $password);
+	if (!$connection) {
+	  	die('Not connected : ' . mysql_error());
+	}
+	$db_selected = mysql_select_db($database, $connection);
+	if (!$db_selected) {
+		die ('Can\'t use db : ' . mysql_error());
+	}
+	$query = "select * from Surveys";
+	$result = mysql_query($query);
+	if($result === FALSE) {
+		die(mysql_error()); 
+	}
 
+	$info = array();
+	while($row = mysql_fetch_assoc($result)) $info[] = $row;
+	$result_json = '{"DBSurvey":[';
+	for($i = 0; $i < count($info); $i++) {
+		if ($i>0) $result_json.=',';
+		$result_json.='{';
+		$result_json.='"s_id":"'.$info[$i]["s_id"].'",';
+		$result_json.='"s_name":"'.$info[$i]["s_name"].'",';
+		$result_json.='"date_created":"'.$info[$i]["date_created"].'",';
+		$result_json.='"date_modified":"'.$info[$i]["date_modified"].'",';
+		$result_json.='"deployed":"'.$info[$i]["deployed"].'"}';
+	}
+	$result_json.=']}';
+	return $result_json;
+}
+function survey_delete($s_id) {
+	$address="68.178.143.53";
+	$username="uschkz";
+	$password="Team14!hkz";
+	$database="uschkz";
+	$connection=mysql_connect ($address, $username, $password);
+	if (!$connection) {
+	  	die('Not connected : ' . mysql_error());
+	}
+	$db_selected = mysql_select_db($database, $connection);
+	if (!$db_selected) {
+		die ('Can\'t use db : ' . mysql_error());
+	}
+	$query = "delete from Surveys where s_id = '".$s_id."'";
+	$result = mysql_query($query);
+	if($result === FALSE) {
+		die(mysql_error()); 
+	}
 }
 //get_SMList();
-survey_import("46973666");
+//survey_import("46973666");
+//get_DBList();
+//survey_delete("46973666");
