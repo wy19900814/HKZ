@@ -1,0 +1,22 @@
+[{"title": "TAMU","isFolder":true},
+{"title": "USC","isFolder":true,
+"children":[
+{"title": "Vermont", "isFolder":true,
+"children":[
+{"title": "Survey 1"}
+]}
+]},
+{"title": "UCLA","isFolder":true,
+"children":[
+{"title": "Jefferson", "isFolder":true,
+"children":[
+{"title": "Survey 2"},
+{"title": "Survey 3"}
+]},
+{"title": "Menlo", "isFolder":true}
+]},
+{"title": "UCSD","isFolder":true,
+"children":[
+{"title": "Vermont", "isFolder":true}
+]}
+]
