@@ -1,4 +1,7 @@
 <?php
+/* 
+ * login.php  by Toni  02/26/2014
+ */
 	function login($u_name, $pwd) {
 
 		$address="68.178.143.53";

@@ -1,6 +1,6 @@
 <?php
 /* 
- * survey_import.php
+ * survey_import.php     by Toni  02/27/2014
  * using auth_client.php by Manuel Lemos
  */
 require('http.php');
@@ -275,7 +275,12 @@ function survey_delete($s_id) {
 	if (!$db_selected) {
 		die ('Can\'t use db : ' . mysql_error());
 	}
-	$query = "delete from Surveys where s_id = '".$s_id."'";
+	$query = "delete from Associates where s_id = '$s_id'";
+		$result = mysql_query($query);
+		if($result === FALSE) {
+			die(mysql_error()); 
+		}
+	$query = "delete from Surveys where s_id = '$s_id'";
 	$result = mysql_query($query);
 	if($result === FALSE) {
 		die(mysql_error()); 
@@ -284,4 +289,4 @@ function survey_delete($s_id) {
 //get_SMList();
 //survey_import("46973666");
 //get_DBList();
-//survey_delete("46973666");
+survey_delete("23123");
