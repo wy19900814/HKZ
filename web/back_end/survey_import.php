@@ -287,6 +287,6 @@ function survey_delete($s_id) {
 	}
 }
 //get_SMList();
-survey_import("46973666");
+//survey_import("46973666");
 //get_DBList();
 //survey_delete("23123");
