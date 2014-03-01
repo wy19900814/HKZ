@@ -204,8 +204,8 @@ function survey_import($s_id) {
 				$info = mysql_fetch_array($result);
 				$q_id = $info[0] + 1;
 				$q_heading = $others->questions[$i]->heading;
-				if ($others->questions[$i]->type->family == 'single_choice') $q_type = 1;
-				elseif ($others->questions[$i]->type->family == 'multiple_choice') $q_type = 2;
+				if ($others->questions[$i]->type->family == 'single_choice') $q_type = 4;
+				elseif ($others->questions[$i]->type->family == 'multiple_choice') $q_type = 5;
 				$query = "insert into Questions(q_id, q_heading, q_type, q_position, s_id) values('$q_id', '$q_heading', '$q_type', '$i', '$s_id')";
 				$result = mysql_query($query);
 				if($result === FALSE) {
@@ -287,6 +287,6 @@ function survey_delete($s_id) {
 	}
 }
 //get_SMList();
-//survey_import("46973666");
+survey_import("46973666");
 //get_DBList();
-survey_delete("23123");
+//survey_delete("23123");
