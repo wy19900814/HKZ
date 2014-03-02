@@ -263,6 +263,7 @@ function get_DBList() {
 	return $result_json;
 }
 function survey_delete($s_id) {
+	require('school_path_survey.php');
 	$address="68.178.143.53";
 	$username="uschkz";
 	$password="Team14!hkz";
@@ -275,11 +276,29 @@ function survey_delete($s_id) {
 	if (!$db_selected) {
 		die ('Can\'t use db : ' . mysql_error());
 	}
-	$query = "delete from Associates where s_id = '$s_id'";
-		$result = mysql_query($query);
-		if($result === FALSE) {
-			die(mysql_error()); 
-		}
+	$query_a = "select p_id from Associates where s_id = '$s_id'";
+	$result_a = mysql_query($query_a);
+	if($result_a === FALSE) {
+		die(mysql_error()); 
+	}
+	$info_a = array();
+	while($row_a = mysql_fetch_assoc($result_a)) $info_a[] = $row_a;
+	for ($i=0; $i<count($info_a); $i++) {
+		$p_id = $info_a[$i]['p_id'];
+		association_delete($p_id, $s_id);
+	}
+
+	$query_q = "delete from Options where q_id in (select q_id from Questions where s_id = $s_id)";
+	$result_q = mysql_query($query_q);
+	if($result_q === FALSE) {
+		die(mysql_error()); 
+	}
+	$query_o = "delete from Questions where s_id = $s_id";
+	$result_o = mysql_query($query_o);
+	if($result_o === FALSE) {
+		die(mysql_error()); 
+	}
+
 	$query = "delete from Surveys where s_id = '$s_id'";
 	$result = mysql_query($query);
 	if($result === FALSE) {
@@ -289,4 +308,4 @@ function survey_delete($s_id) {
 //echo get_SMList();
 //survey_import("46973666");
 //get_DBList();
-//survey_delete("23123");
+survey_delete("123456");
