@@ -63,7 +63,7 @@
 		  die ('Can\'t use db : ' . mysql_error());
 		}
 
-		$query_p = "select p_id from Paths where s_id = '$s_id'";
+		$query_p = "select p_id from Paths where sch_id = '$sch_id'";
 		$result_p = mysql_query($query_p);
 		if($result_p === FALSE) {
 			die(mysql_error()); 
@@ -317,7 +317,7 @@
 	//school_delete("1");
 	//path_add("Jefferson", "1234", "4321", "121412", "213123", "6", "1");
 	//path_modify("0","JeffersonBlvd");
-	path_delete("1");
+	//path_delete("1");
 	//association_add("1", "23123");
 	//association_delete("1", "123456");
 	//survey_deploy("23123");
