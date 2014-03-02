@@ -62,15 +62,17 @@
 		if (!$db_selected) {
 		  die ('Can\'t use db : ' . mysql_error());
 		}
-		$query = "delete from Associates where p_id in (select p_id from Paths where sch_id = '$sch_id')";
-		$result = mysql_query($query);
-		if($result === FALSE) {
+
+		$query_p = "select p_id from Paths where s_id = '$s_id'";
+		$result_p = mysql_query($query_p);
+		if($result_p === FALSE) {
 			die(mysql_error()); 
 		}
-		$query = "delete from Paths where sch_id = '$sch_id'";
-		$result = mysql_query($query);
-		if($result === FALSE) {
-			die(mysql_error()); 
+		$info_p = array();
+		while($row_p = mysql_fetch_assoc($result_p)) $info_p[] = $row_p;
+		for ($i=0; $i<count($info_p); $i++) {
+			$p_id = $info_p[$i]['p_id'];
+			path_delete($p_id);
 		}
 		$query = "delete from Schools where sch_id = '$sch_id'";
 		$result = mysql_query($query);
@@ -139,10 +141,16 @@
 		if (!$db_selected) {
 		  die ('Can\'t use db : ' . mysql_error());
 		}
-		$query = "delete from Associates where p_id = '$p_id'";
-		$result = mysql_query($query);
-		if($result === FALSE) {
+		$query_a = "select s_id from Associates where p_id = '$p_id'";
+		$result_a = mysql_query($query_a);
+		if($result_a === FALSE) {
 			die(mysql_error()); 
+		}
+		$info_a = array();
+		while($row_a = mysql_fetch_assoc($result_a)) $info_a[] = $row_a;
+		for ($i=0; $i<count($info_a); $i++) {
+			$s_id = $info_a[$i]['s_id'];
+			association_delete($p_id, $s_id);
 		}
 		$query = "delete from Paths where p_id = '$p_id'";
 		$result = mysql_query($query);
@@ -183,6 +191,11 @@
 		$db_selected = mysql_select_db($database, $connection);
 		if (!$db_selected) {
 		  die ('Can\'t use db : ' . mysql_error());
+		}
+		$query = "delete from Answers where (p_id = '$p_id') AND (q_id in (select q_id from Questions where s_id = $s_id))";
+		$result = mysql_query($query);
+		if($result === FALSE) {
+			die(mysql_error()); 
 		}
 		$query = "delete from Associates where (p_id = '$p_id') AND (s_id = '$s_id')";
 		$result = mysql_query($query);
@@ -299,14 +312,14 @@
 		$result_json.=']}';
 		return $result_json;
 	}
-	school_add("USC","3670 Trousdale Pkwy");
+	//school_add("USC","3670 Trousdale Pkwy");
 	//school_modify("1","Usc","90089");
 	//school_delete("1");
-	path_add("Jefferson", "1234", "4321", "121412", "213123", "6", "1");
+	//path_add("Jefferson", "1234", "4321", "121412", "213123", "6", "1");
 	//path_modify("0","JeffersonBlvd");
-	//path_delete("0");
-	association_add("1", "23123");
-	//association_delete("2", "2");
+	path_delete("1");
+	//association_add("1", "23123");
+	//association_delete("1", "123456");
 	//survey_deploy("23123");
 	//survey_retract("23123");
 	//get_SPS();

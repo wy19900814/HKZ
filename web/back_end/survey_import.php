@@ -13,7 +13,7 @@ function get_SMList() {
 	$client->debug = false;
 	$client->debug_http = true;
 	$client->server = 'SurveyMonkey';
-	$client->redirect_uri = 'http://letsallgetcovered.org/lets6502/hkztest2/survey_import.php';
+	$client->redirect_uri = 'http://letsallgetcovered.org/lets6502/hkz_v1/main/survey_import.php';
 
 	$client->client_id = 'tnt_7'; $application_line = __LINE__; 
 	$client->client_secret = 'vU6qCdAVfD52eRPn6GTrcJCTxYK63zaJ';
