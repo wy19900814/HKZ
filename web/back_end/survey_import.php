@@ -51,7 +51,7 @@ function get_SMList() {
 			if ($i>0) $result.=',';
 			$result.='{';
 			$result.='"s_id":"'.$array[$i]->survey_id.'",';
-			$result.='"s_name":"'.$array[$i]->title.'",';
+			$result.='"s_name":"'.htmlspecialchars($array[$i]->title).'",';
 			$result.='"date_created":"'.$array[$i]->date_created.'",';
 			$result.='"date_modified":"'.$array[$i]->date_modified.'"}';
 		}
@@ -308,4 +308,4 @@ function survey_delete($s_id) {
 //echo get_SMList();
 //survey_import("46973666");
 //get_DBList();
-survey_delete("123456");
+//survey_delete("123456");
