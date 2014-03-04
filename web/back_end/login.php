@@ -4,7 +4,7 @@
  */
 	function login($u_name, $pwd) {
 
-		$address="68.178.143.53";
+		$address="localhost:3306";//"68.178.143.53";
 		$username="uschkz";
 		$password="Team14!hkz";
 		$database="uschkz";
