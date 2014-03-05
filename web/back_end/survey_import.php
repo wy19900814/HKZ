@@ -43,12 +43,14 @@ function get_SMList() {
 		exit;
 	if($success)
 	{
-		//echo HtmlSpecialChars(print_r($surveys->data->surveys));
 		$result = '{"SMSurvey":[';
 		$array = $surveys->data->surveys;
+		$flag = 0;
 		for($i = 0; $i < count($array); $i++)
 		{
-			if ($i>0) $result.=',';
+			if (strcmp(substr(htmlspecialchars($array[$i]->title), 0, 4),"HKZ_") != 0) continue;
+			if ($flag > 0) $result.=',';
+			else $flag = 1;
 			$result.='{';
 			$result.='"s_id":"'.$array[$i]->survey_id.'",';
 			$result.='"s_name":"'.htmlspecialchars($array[$i]->title).'",';
@@ -99,7 +101,6 @@ function survey_import($s_id) {
 		exit;
 	if($success)
 	{
-			//echo '<pre>Survey1 details: ', HtmlSpecialChars(print_r($surveydetails->data)),'</pre>';
 			$page_num = count($surveydetails->data->pages);
 			if ($page_num>3) {
 				return "Error while importing a survey: more than 3 pages";
