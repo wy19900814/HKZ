@@ -203,46 +203,7 @@
 			die(mysql_error()); 
 		}
  	}
-	function survey_deploy($s_id) {
-		$address="68.178.143.53";
-		$username="uschkz";
-		$password="Team14!hkz";
-		$database="uschkz";
-		$connection=mysql_connect ($address, $username, $password);
-		if (!$connection) {
-		  die('Not connected : ' . mysql_error());
-		}
-		
-		$db_selected = mysql_select_db($database, $connection);
-		if (!$db_selected) {
-		  die ('Can\'t use db : ' . mysql_error());
-		}
-		$query = "update Surveys set deployed = 1 where s_id = '$s_id'";
-		$result = mysql_query($query);
-		if($result === FALSE) {
-			die(mysql_error()); 
-		}
-	}
-    function survey_retract($s_id) {
-    	$address="68.178.143.53";
-		$username="uschkz";
-		$password="Team14!hkz";
-		$database="uschkz";
-		$connection=mysql_connect ($address, $username, $password);
-		if (!$connection) {
-		  die('Not connected : ' . mysql_error());
-		}
-		
-		$db_selected = mysql_select_db($database, $connection);
-		if (!$db_selected) {
-		  die ('Can\'t use db : ' . mysql_error());
-		}
-		$query = "update Surveys set deployed = 0 where s_id = '$s_id'";
-		$result = mysql_query($query);
-		if($result === FALSE) {
-			die(mysql_error()); 
-		}
-    }
+	
 	function get_SPS() {
 		$address="68.178.143.53";
 		$username="uschkz";

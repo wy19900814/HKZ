@@ -154,7 +154,7 @@ function survey_import($s_id) {
 	    		die(mysql_error()); 
 			}
 			for($i = 0; $i < count($blocks->questions); $i++) {
-				$query = "select count(*) from Questions";
+				$query = "select max(q_id) from Questions";
 				$result = mysql_query($query);
 				if($result === FALSE) {
 		    		die(mysql_error()); 
@@ -171,8 +171,8 @@ function survey_import($s_id) {
 				}
 				$options = $blocks->questions[$i]->answers;
 				for($j = 0; $j < count($options); $j++) {
-					$o_id = $options->position;
-					$o_text = $options->text;
+					$o_id = $options[$j]->position;
+					$o_text = $options[$j]->text;
 					$query = "insert into Options(o_id, q_id, o_text) values('$o_id', '$q_id', '$o_text')";
 					$result = mysql_query($query);
 					if($result === FALSE) {
@@ -181,7 +181,7 @@ function survey_import($s_id) {
 				}
 			}
 			for($i = 0; $i < count($tallies->questions); $i++) {
-				$query = "select count(*) from Questions";
+				$query = "select max(q_id) from Questions";
 				$result = mysql_query($query);
 				if($result === FALSE) {
 		    		die(mysql_error()); 
@@ -197,7 +197,7 @@ function survey_import($s_id) {
 				}
 			}
 			for($i = 0; $i < count($others->questions); $i++) {
-				$query = "select count(*) from Questions";
+				$query = "select max(q_id) from Questions";
 				$result = mysql_query($query);
 				if($result === FALSE) {
 		    		die(mysql_error()); 
@@ -214,8 +214,8 @@ function survey_import($s_id) {
 				}
 				$options = $others->questions[$i]->answers;
 				for($j = 0; $j < count($options); $j++) {
-					$o_id = $options->position;
-					$o_text = $options->text;
+					$o_id = $options[$j]->position;
+					$o_text = $options[$j]->text;
 					$query = "insert into Options(o_id, q_id, o_text) values('$o_id', '$q_id', '$o_text')";
 					$result = mysql_query($query);
 					if($result === FALSE) {
@@ -306,7 +306,47 @@ function survey_delete($s_id) {
 		die(mysql_error()); 
 	}
 }
+function survey_deploy($s_id) {
+	$address="68.178.143.53";
+	$username="uschkz";
+	$password="Team14!hkz";
+	$database="uschkz";
+	$connection=mysql_connect ($address, $username, $password);
+	if (!$connection) {
+	  die('Not connected : ' . mysql_error());
+	}
+	
+	$db_selected = mysql_select_db($database, $connection);
+	if (!$db_selected) {
+	  die ('Can\'t use db : ' . mysql_error());
+	}
+	$query = "update Surveys set deployed = 1 where s_id = '$s_id'";
+	$result = mysql_query($query);
+	if($result === FALSE) {
+		die(mysql_error()); 
+	}
+}
+function survey_retract($s_id) {
+	$address="68.178.143.53";
+	$username="uschkz";
+	$password="Team14!hkz";
+	$database="uschkz";
+	$connection=mysql_connect ($address, $username, $password);
+	if (!$connection) {
+	  die('Not connected : ' . mysql_error());
+	}
+	
+	$db_selected = mysql_select_db($database, $connection);
+	if (!$db_selected) {
+	  die ('Can\'t use db : ' . mysql_error());
+	}
+	$query = "update Surveys set deployed = 0 where s_id = '$s_id'";
+	$result = mysql_query($query);
+	if($result === FALSE) {
+		die(mysql_error()); 
+	}
+}
 //echo get_SMList();
-//survey_import("46973666");
+survey_import("46790148");
 //get_DBList();
 //survey_delete("123456");
