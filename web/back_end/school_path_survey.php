@@ -16,7 +16,7 @@
 		if (!$db_selected) {
 		  die ('Can\'t use db : ' . mysql_error());
 		}
-		$query = "select count(*) from Schools";
+		$query = "select max(sch_id) from Schools";
 		$result = mysql_query($query);
 		if($result === FALSE) {
     		die(mysql_error()); 
@@ -94,7 +94,7 @@
 		if (!$db_selected) {
 		  die ('Can\'t use db : ' . mysql_error());
 		}
-		$query = "select count(*) from Paths";
+		$query = "select max(p_id) from Paths";
 		$result = mysql_query($query);
 		if($result === FALSE) {
     		die(mysql_error()); 

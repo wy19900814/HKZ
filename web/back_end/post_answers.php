@@ -22,7 +22,7 @@
 		$block_id = $info[$i]['block_id'];
 		$p_id = $info[$i]['p_id'];
 		$a_content = $info[$i]['a_content'];
-		$query = "select count(*) from Answers";
+		$query = "select max(a_id) from Answers";
 		$result = mysql_query($query);
 		if($result === FALSE) {
     		die(mysql_error()); 
