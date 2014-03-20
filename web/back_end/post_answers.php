@@ -1,6 +1,6 @@
 <?php
 /* 
- * receive_answers.php  by Toni  03/01/2014
+ * post_answers.php  by Toni  03/01/2014
  */
 	$data = json_decode(file_get_contents("php://input"), true);
 	$address="68.178.143.53";
