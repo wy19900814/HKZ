@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>
+			HKZ
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<style type="text/css">
+			a { text-decoration: none; } label{ font-size: 40px; }
+		</style>
+		
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css"
+		/>
+		<script src="http://code.jquery.com/jquery-1.7.1.min.js">
+		</script>
+		<script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js">
+		</script>
+		<script src="do_survey.js"></script>
+		<script type="text/javascript" src="set_block_answer.js"></script>
+		<script type="text/javascript" src="util.js"></script>
+		<script type="text/javascript" src="getLocalSurvey.js"></script>
+		<script type="text/javascript" src="set_tally_answer.js"></script>
+		<script type="text/javascript" src="set_other_answer.js"></script>
+	</head>
+	<body>
+		<div data-role="page" data-theme="c" id="homepage" data-add-back-btn="true">
+			<div data-role="header" data-theme="b">
+				<h1>
+					CHC
+				</h1>
+			</div>
+			<div data-role="content" align="center">
+				<label>
+					Health Kid Zone
+				</label>
+			</div>
+			<div data-role="content">
+				
+					<button class="ui-btn" onclick="getSchools()">
+						New Survey
+					</button>
+				
+				<a id="#localSurvey">
+					<button class="ui-btn" onclick="getLocalSurvey()">
+						Local Survey
+					</button>
+				</a>
+			</div>
+		</div>
+
+
+		
+	</body>
+
+</html>
