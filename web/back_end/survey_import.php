@@ -347,6 +347,6 @@ function survey_retract($s_id) {
 	}
 }
 //echo get_SMList();
-survey_import("46790148");
+//survey_import("46790148");
 //get_DBList();
 //survey_delete("123456");
