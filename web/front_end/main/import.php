@@ -5,12 +5,8 @@
 <head>
 <script src="../js/jquery.js" type="text/javascript"></script>
 <script src="../js/bootstrap.js" type="text/javascript"></script>
-<script src="jQuery/jquery.bootstrap-duallistbox.js" type="text/javascript"></script>
-<script src="jQuery/prettify.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
-<link rel="stylesheet" type="text/css" href="css/bootstrap-duallistbox.css">
-<link rel="stylesheet" type="text/css" href="css/prettify.css">
 
 <style type="text/css">
 	@font-face{
@@ -18,17 +14,22 @@
     	src:url("../fonts/MyriadPro Regular.otf");
     }
     body{font-family:Cus_font;}
+    .info{font-size: 20px;}
+    .btn{width: 150px;position: relative;top:60px;}
+    .form-control{
+       height:300px;
+     }
 </style>
 
 <script>
   $(document).ready(function(){
       //get SMList & DBList
-      <?php include'survey_import.php'; 
+       <?php include'survey_import.php'; 
             $arr_sm=get_SMList(); $arr_db=get_DBList();
-            if(isset($_POST['update'])){
-            $back="before";
+            if(isset($_POST['add'])){
             $cur_data=$_POST['cur_data'];
-            $dbl=$_POST['db'];
+            survey_import($cur_data);
+           /* $dbl=$_POST['db'];
             if($dbl!="none"){
             for($j=0;$j<count($cur_data);$j++){
             	$flag=true;
@@ -46,8 +47,12 @@
             	}
             }else{
             	for($j=0;$j<count($cur_data);$j++){survey_import($cur_data[$j]);}
+            }*/
+           }
+            if(isset($_POST['del'])){
+              $cur_data=$_POST['cur_data'];
+              survey_delete($cur_data);
             }
-        }
       ?>
         var smlist=<?php echo $arr_sm; ?>;
         var dblist=<?php echo $arr_db; ?>;
@@ -59,28 +64,27 @@
             if(smlist.SMSurvey[i].s_id==dblist.DBSurvey[j].s_id) {flag=1;}
           };
           if(!flag) {
-            $("#slist").append('<option value="'+smlist.SMSurvey[i].s_id+'">'+smlist.SMSurvey[i].s_name+'</option>');
+            $("#sml").append('<option value="'+smlist.SMSurvey[i].s_id+'">'+smlist.SMSurvey[i].s_name+'</option>');
           }
       }
 
       for(var j=0; j<dblist.DBSurvey.length;j++){
-        $("#slist").append('<option value="'+dblist.DBSurvey[j].s_id+'" selected>'+dblist.DBSurvey[j].s_name+'</option>');
+        $("#dbl").append('<option value="'+dblist.DBSurvey[j].s_id+'">'+dblist.DBSurvey[j].s_name+'</option>');
         $("#dbtable").append('<tr><td>'+dblist.DBSurvey[j].s_id+'</td><td>'+dblist.DBSurvey[j].s_name+'</td><td>'+dblist.DBSurvey[j].date_created+'</td><td>'+dblist.DBSurvey[j].date_modified+'</td></tr>');
       }
 
       //Initial the Duallistbox 
-      $("#slist").bootstrapDualListbox({
+      /*$("#slist").bootstrapDualListbox({
       nonselectedlistlabel:"Survey Lists from Survey Monkey",
       selectedlistlabel:'Survey Lists from Database',
       preserveselectiononmove:'moved',
       moveonselect:false
-      });
+      });*/
 
-
-      $("#list_btn").click(function(){
-          var isurveys=$('#slist').val();
-          var db_data="";
-          for(var i=0;i<dblist.DBSurvey.length;i++){
+      
+      $("#mov").click(function(){
+          var isurveys=$('#sml option:selected').val();
+        /*  for(var i=0;i<dblist.DBSurvey.length;i++){
           	if(i==dblist.DBSurvey.length-1){
           		db_data=db_data+dblist.DBSurvey[i].s_id;
           	}
@@ -91,11 +95,11 @@
           db_data=db_data.split(",");
           if(db_data==""){db_data="none"};
           //alert(db_data);
-          //alert(isurveys);
+          //alert(isurveys);*/
            $.ajax({
             url:"import.php",
             type:"POST",
-            data:{cur_data:isurveys,db:db_data,update:true},
+            data:{cur_data:isurveys,add:true},
             //dataType:"json",
             async:false,
             error: function(){  
@@ -103,8 +107,24 @@
             },  
             success:function(data){}
           });
-           window.location.reload();
+           window.location.href="import.php";
       });
+
+      $("#remov").click(function(){
+          var db=$("#dbl option:selected").val();
+          $.ajax({
+            url:"import.php",
+            type:"POST",
+            data:{cur_data:db,del:true},
+            //dataType:"json",
+            async:false,
+            error: function(){  
+              alert('Error loading JSON document');  
+            },  
+            success:function(data){}
+          });
+           window.location.href="import.php";
+      })
   })
 </script></head>
 <body>
@@ -130,16 +150,28 @@
 <h2>Introduction</h2>
 <p>In this part, you can import the surveys created in Survey Monkey to our database. Firstly, you need to select the surveys in the left(created using Survey Monkey) list and add them to the right list which would be saved in database. Once you submit the current selections, it can store the survey lists in the right list to our database.</p>
 </div>
-<form id="slistform" action=""><select multiple="multiple" size="10" name="duallistbox[]" id="slist"></select><br />
-<button type="button" class="btn btn-default btn-block" id="list_btn">Update Survey</button></form><br><br><br>
+
+<div class="row">
+  <div class="col-md-5">
+  <span class="info">Survey Monkey List</span>
+  <select multiple="multiple" class="form-control" size="10" id="sml" ></select></div>
+  <div class="col-md-2"><center>
+    <button type="button" class="btn btn-primary btn-lg" id="mov">Move</button><br><br>
+    <button type="button" class="btn btn-default btn-lg" id="remov">Remove</button></center>
+  </div>
+  <div class="col-md-5">
+  <span class="info">Database List</span>
+  <select multiple="multiple" class="form-control" size="10" id="dbl"></select></div>
+  </div>
+<br><br>
 <div class="row">
 <table class="table table-hover" id="dbtable">
 <tbody>
 <tr>
-<td>Survey Id</td>
-<td>Survey Name</td>
-<td>Created Date</td>
-<td>Modified Date</td>
+<th>Survey Id</th>
+<th>Survey Name</th>
+<th>Created Date</th>
+<th>Modified Date</th>
 </tr>
 </tbody>
 </table>
