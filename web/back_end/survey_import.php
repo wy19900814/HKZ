@@ -258,6 +258,7 @@ function get_DBList() {
 		$result_json.='"s_name":"'.$info[$i]["s_name"].'",';
 		$result_json.='"date_created":"'.$info[$i]["date_created"].'",';
 		$result_json.='"date_modified":"'.$info[$i]["date_modified"].'",';
+		$result_json.='"num_question":"'.$info[$i]["num_question"].'",';
 		$result_json.='"deployed":"'.$info[$i]["deployed"].'"}';
 	}
 	$result_json.=']}';
