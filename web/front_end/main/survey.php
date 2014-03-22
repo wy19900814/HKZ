@@ -20,6 +20,34 @@
     body{font-family:Cus_font;}
   </style>
   <script type="text/javascript">
+  <?php include('school_path_survey.php');
+	   include('survey_import.php');?>
+  	var SPSList;
+    var DBList;
+
+    $.ajax({
+            url:"get_data.php",
+            cache: false,
+            dataType:"json",
+            data:{list:"getList"},
+            type:"POST",
+            async:false,
+            success:function(data){
+              SPSList=data;
+            }
+      });
+
+    $.ajax({
+            url:"get_data.php",
+            cache: false,
+            dataType:"json",
+            data:{list_db:"getList"},
+            type:"POST",
+            async:false,
+            success:function(data){
+              DBList=data;
+            }
+      });
   	function init_path(ls){
           //show school list
           var init='<option value="-1,-1"></option>';
@@ -68,7 +96,7 @@
     			for(var j=0;j<SPSList.Schools[i].Paths.length;j++){
     				if(SPSList.Schools[i].Paths[j].Surveys.length>0){
     					for(var k=0;k<SPSList.Schools[i].Paths[j].Surveys.length;k++){
-    						init+='<tr><td>'+SPSList.Schools[i].Paths[j].Surveys[k].s_id+'</td><td>'+SPSList.Schools[i].Paths[j].Surveys[k].s_name+'</td><td>'+SPSList.Schools[i].Paths[j].p_name+'</td><td>'+SPSList.Schools[i].sch_name+'</td><td>'+SPSList.Schools[i].Paths[j].Surveys[k].num_question+'</td><td><input type="checkbox" class="check_asso"></td><td style="display:none">'+SPSList.Schools[i].Paths[j].p_id+'</td></tr>';
+    						init+='<tr><td>'+SPSList.Schools[i].Paths[j].Surveys[k].s_id+'</td><td>'+SPSList.Schools[i].Paths[j].Surveys[k].s_name+'</td><td>'+SPSList.Schools[i].Paths[j].p_name+'</td><td>'+SPSList.Schools[i].sch_name+'</td><td><input type="checkbox" class="check_asso"></td><td style="display:none">'+SPSList.Schools[i].Paths[j].p_id+'</td></tr>';
     					}
     				}
     			}
@@ -105,13 +133,7 @@
         	return (pos);
         }
     };
-
-  	<?php include('school_path_survey.php'); 
-  	      include('survey_import.php'); 
-            $arr_db=get_DBList();
-            $arr=get_SPS(); ?>
-    var SPSList=<?php echo $arr ?>;
-    var DBList=<?php echo $arr_db ?>;
+    
   	$(function(){
   		$('#tree').dynatree({
           initAjax: {
@@ -214,7 +236,7 @@
 				if(SPSList.Schools[path_id[0]].Paths[path_id[1]].Surveys.length>0){
                 	tbl='';
                 	for(var i=0;i<SPSList.Schools[path_id[0]].Paths[path_id[1]].Surveys.length;i++){
-                		tbl+='<tr><td>'+SPSList.Schools[path_id[0]].Paths[path_id[1]].Surveys[i].s_id+'</td><td>'+SPSList.Schools[path_id[0]].Paths[path_id[1]].Surveys[i].s_name+'</td><td>'+SPSList.Schools[path_id[0]].Paths[path_id[1]].p_name+'</td><td>'+SPSList.Schools[path_id[0]].sch_name+'</td><td>'+SPSList.Schools[path_id[0]].Paths[path_id[1]].Surveys[i].num_question+'</td><td><input type="checkbox" class="check_asso"></td><td style="display:none">'+SPSList.Schools[path_id[0]].Paths[path_id[1]].p_id+'</td></tr>';
+                		tbl+='<tr><td>'+SPSList.Schools[path_id[0]].Paths[path_id[1]].Surveys[i].s_id+'</td><td>'+SPSList.Schools[path_id[0]].Paths[path_id[1]].Surveys[i].s_name+'</td><td>'+SPSList.Schools[path_id[0]].Paths[path_id[1]].p_name+'</td><td>'+SPSList.Schools[path_id[0]].sch_name+'</td><td><input type="checkbox" class="check_asso"></td><td style="display:none">'+SPSList.Schools[path_id[0]].Paths[path_id[1]].p_id+'</td></tr>';
                 	};
                 	$("#assolist").html(tbl);
                 }else{
@@ -230,7 +252,7 @@
               if($(this).attr("checked")=="checked"){
                 del_id[i]=$(this).closest("td").siblings(":nth-child(1)").text();
                 del_name[i]=$(this).closest("td").siblings(":nth-child(2)").text();
-                pth_id[i]=$(this).closest("td").siblings(":nth-child(7)").text();
+                pth_id[i]=$(this).closest("td").siblings(":nth-child(6)").text();
                 pth_name[i]=$(this).closest("td").siblings(":nth-child(3)").text();
                 i++;
               };
@@ -321,7 +343,7 @@
               		<div class="col-md-5"><select class="form-control" id="pth_disp"></select></div>
               		<div class="col-md-2"><button type="button" class="btn btn-primary" id="del_asso">Delete Association</button></div>
             	</div><br>
-        		<div><table class="table table-hover"><thead><tr><th>Survey Id</th><th>Survey Name</th><th>Path</th><th>School</th><th>Number of Questions</th><th><input type="checkbox" id="all_asso"></th></tr></thead><tbody id="assolist"></tbody></table></div>
+        		<div><table class="table table-hover"><thead><tr><th>Survey Id</th><th>Survey Name</th><th>Path</th><th>School</th><th><input type="checkbox" id="all_asso"></th></tr></thead><tbody id="assolist"></tbody></table></div>
         	</div>
         </div>
   	</div>

@@ -25,6 +25,19 @@
       var markersArray=[],path_points=[];
       var directionsDisplay=new google.maps.DirectionsRenderer();
       var directionsService=new google.maps.DirectionsService(); 
+      var SPSList;
+
+      $.ajax({
+            url:"get_data.php",
+            cache: false,
+            dataType:"json",
+            data:{list:"getList"},
+            type:"POST",
+            async:false,
+            success:function(data){
+              SPSList=data;
+            }
+      });
 
       function placeMarker(marker){
         var index=markersArray.push(marker)-1;
@@ -60,8 +73,7 @@
           center:latlng,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
-        map=new google.maps.Map(document.getElementById(element),mapOptions);
-       // directionsDisplay.setMap(map);        
+        map=new google.maps.Map(document.getElementById(element),mapOptions);      
       };
 
       function marker_enable(gmap){
@@ -151,9 +163,9 @@
           $("#pthlist").html(tbl);
     };
 
-      <?php include('school_path_survey.php'); 
-            $arr=get_SPS(); ?>
-        var SPSList=<?php echo $arr ?>;
+
+    <?php include('school_path_survey.php');?>
+        
         $(function(){
           $('#tree').dynatree({
             initAjax:{
@@ -171,8 +183,6 @@
           $("#path_tabs a[href='#mod']").click(function(e){
             init_school("#sch_mod");
             init_allpath();
-            <?php $arr=get_SPS(); ?>
-            SPSList=<?php echo $arr ?>;
           });
           $("#path_tabs a[href='#add']").on('shown.bs.tab', function(e){
             initialize('gm');
@@ -228,6 +238,15 @@
             $(this).popover('hide');
           });
 
+          $("#schs").change(function(){
+            address=SPSList.Schools[find_sch('#schs')].sch_address;
+            geocoder.geocode({'address':address}, function(results,status){
+              if(status==google.maps.GeocoderStatus.OK){
+                map.setCenter(results[0].geometry.location);
+              }
+            });
+          });
+
           $('.schools').change(function(){
             var schoolid=this.value;
             var cor_path='<option value="-1"></option>';
@@ -264,9 +283,9 @@
               else{
                 if($('#schs option:selected').val()==-1){$('#schs').popover('show');}
                 else{
-                alert($("#blocks").val());
                 $.ajax({
                   url:"path.php",
+                  cache: false,
                   data:{pn:$("#pname").val(),sch:$('#schs option:selected').val(),nbl:$("#blocks").val(),sp_lat:path_points[0].lat(),sp_lng:path_points[0].lng(),ep_lat:path_points[1].lat(),ep_lng:path_points[1].lng()},
                   type:"POST",
                   async:false
@@ -276,7 +295,7 @@
                     path_add($_POST['pn'], $_POST['sp_lng'], $_POST['sp_lat'], $_POST['ep_lng'], $_POST['ep_lat'], $_POST['nbl'], $_POST['sch']); 
                   };
                 ?>
-                window.location.href="path.php";
+                window.location.reload(true);
               }
             }
           }
@@ -300,15 +319,15 @@
               arr=find_path('.schools','.paths');j=arr[0];i=arr[1];
               $.ajax({
                 url:"path.php",
-                  data:{path_id:SPSList.Schools[j].Paths[i].p_id,npn:$("#chg").val()},
+                cache: false,
+                data:{path_id:SPSList.Schools[j].Paths[i].p_id,npn:$("#chg").val()},
                 type:"POST",
-                async:false,
-                success:function(data){alert("success");}
+                async:false
               });
               <?php 
                 if(isset($_POST['path_id'])){
                   path_modify($_POST['path_id'],$_POST['npn']);} ?>
-              window.location.href="path.php";
+              window.location.reload(true);
             }
           });
 
@@ -322,7 +341,7 @@
                 };
                 tbl+='</tbody>';
                 $("#pthlist").html(tbl);
-              }else{alert("No path");}
+              }else{$("#pthlist").html("");$("#alrmodal_1").find("h4").text("This school contains no path now");$("#alrmodal_1").modal('show');}
             }else{init_allpath();}
             $("#all").attr("checked",false);
           });
@@ -354,14 +373,16 @@
             $(document).on("click","#sub_del",function(){
               $.ajax({
                 url:"path.php",
+                cache: false,
                 data:{dellist:del_id},
                 type:"POST",
                 async:false
                 });
+              
               <?php if(isset($_POST['dellist'])){
                 $urr=$_POST['dellist'];
                 for($i=0;$i<count($urr);$i++){path_delete($urr[$i]);}} ?>
-              window.location.href="path.php";
+              window.location.reload(true);
             });
           });
       });     
@@ -471,6 +492,18 @@
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary" id="sub_del">Delete Path</button>
+              </div>
+            </div>
+          </div>
+        </div>
+  <div class="modal fade in" id="alrmodal_1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-body">
+              <h4></h4>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
               </div>
             </div>
           </div>

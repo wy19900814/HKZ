@@ -27,6 +27,19 @@
   <script type="text/javascript">
       var geocoder;
       var map;
+      var schlist;
+      
+      $.ajax({
+            url:"get_data.php",
+            cache: false,
+            dataType:"json",
+            data:{list:"getList"},
+            type:"POST",
+            async:false,
+            success:function(data){
+              schlist=data;
+            }
+      });
       //initialize Google Map
       function initialize(){
         geocoder=new google.maps.Geocoder();
@@ -56,20 +69,20 @@
     function init_school(){
         init="";
         for(var i=0;i<schlist.Schools.length;i++){
-        init+='<tr><td>'+schlist.Schools[i].sch_id+'</td><td>'+schlist.Schools[i].sch_name+'</td><td>'+schlist.Schools[i].sch_address+'</td><td><div class="dropdown"><button class="btn dropdown-toggle" data-toggle="dropdown" type="button"><span class="caret"></span></button><ul class="dropdown-menu" role="menu"><li><a href="#" class="modify">Modify Name</a></li><li><a href="#" class="delete" data-toggle="modal" data-target="#alrmodal">Delete School</a></li></ul></div></td></tr>';
+        init+='<tr><td>'+schlist.Schools[i].sch_id+'</td><td>'+schlist.Schools[i].sch_name+'</td><td>'+schlist.Schools[i].sch_address+'</td><td><div class="dropdown"><button class="btn dropdown-toggle" data-toggle="dropdown" type="button"><span class="caret"></span></button><ul class="dropdown-menu" role="menu"><li ><a href="#" class="modify">Modify Name</a></li><li><a href="#" class="del">Delete School</a></li></ul></div></td></tr>';
         };
         $("#scl").html(init);
-        alert("test");
-      }
+      };
 
   <?php include'school_path_survey.php';
-        $arr=get_SPS();
         if(isset($_POST['nm'])){
           $cur_name=$_POST['nm'];$cur_addr=$_POST['ad'];
           school_add($cur_name,$cur_addr);
-        };?>
+        };
+  ?>
+  
 
-  var schlist=<?php echo $arr ?>;
+  
   $(function(){
      $('#tree').dynatree({
           initAjax: {
@@ -77,6 +90,8 @@
           }
       });
       
+      
+
       //show school list in DB
       init_school();
 
@@ -142,23 +157,25 @@
         else{
           $.ajax({
             url:"school.php",
+            cache: false,
             data:{nm:name,ad:addr},
             type:"POST",
             async:false,
             success: function(data){alert("Success");}
           });
-          window.location.href="school.php";
+          window.location.reload();
         }
       }
     });
 
     //Modify School Name
-    $(".modify").click(function(){
+    $("#scl").on('click','.modify',function(){
       var selected=$(this).closest("td");
       $("#edit").html('<br><div class="form-group"><label for="mod_name" class="col-md-3" style="text-align:right">Change '+selected.siblings(":nth-child(2)").text()+' to: </label><div class="col-md-4"><input type="text" class="form-control" name="selected_sname" id="mod_name"></div><div class="col-md-2 col-md-offeset-1"><button type="submit" class="btn btn-primary" id="sub_change">Submit New Name</button></div>');   
       $(document).on("click","#sub_change",function(){
         $.ajax({
           url:"school.php",
+          cache: false,
           data:{newnm:$("#mod_name").val(),sid:selected.siblings(":nth-child(1)").text(),s_addr:selected.siblings(":nth-child(3)").text()},
           type:"POST",
           async:false
@@ -166,25 +183,28 @@
        <?php
         if(isset($_POST['newnm'])){school_modify($_POST['sid'],$_POST['newnm'],$_POST['s_addr']);}
       ?>
+      window.location.reload();
       }); 
     });
 
     
-    $(".delete").click(function(){
+   $("#scl").on('click','.del',function(){
       var selected=$(this).closest("td");
       $("#alrmodal").find("p").text("Do you really want to delete the school "+selected.siblings(":nth-child(2)").text()+" ?");
+      $("#alrmodal").modal('show');
       $(document).on("click","#sub_del",function(){
        // alert(selected.siblings(":nth-child(1)").text());
         $.ajax({
           url:"school.php",
+          cache: false,
           data:{sdid:selected.siblings(":nth-child(1)").text()},
           type:"POST",
           async:false
         });
         <?php if(isset($_POST['sdid'])){school_delete($_POST['sdid']);} ?>
-        window.location.href="school.php";
+        window.location.reload();
       });
-    });
+     });
 }) 
 </script>
 
