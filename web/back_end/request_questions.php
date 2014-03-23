@@ -42,7 +42,7 @@
 		$info_o = array();
 		while($row_o = mysql_fetch_assoc($result_o)) $info_o[] = $row_o;
 		for ($j=0; $j<count($info_o); $j++) {
-			if ($i>0) $result_json.=',';
+			if ($j>0) $result_json.=',';
 			$result_json.='{';
 			$result_json.='"o_id":"'.$info_o[$j]["o_id"].'",';
 			$result_json.='"o_text":"'.$info_o[$j]["o_text"].'"}';
@@ -95,7 +95,7 @@
 		$info_o = array();
 		while($row_o = mysql_fetch_assoc($result_o)) $info_o[] = $row_o;
 		for ($j=0; $j<count($info_o); $j++) {
-			if ($i>0) $result_json.=',';
+			if ($j>0) $result_json.=',';
 			$result_json.='{';
 			$result_json.='"o_id":"'.$info_o[$j]["o_id"].'",';
 			$result_json.='"o_text":"'.$info_o[$j]["o_text"].'"}';
