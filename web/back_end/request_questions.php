@@ -49,7 +49,7 @@
 		}
 		$result_json.=']}';
 	}
-	$result_json.='],';
+	$result_json.='],"Tallies": [';
 
 	$query = "select * from Questions where (s_id = '$s_id') AND (q_type = 3)";
 	$result = mysql_query($query);
@@ -68,7 +68,7 @@
 		$result_json.='"q_type":"'.$info[$i]["q_type"].'",';
 		$result_json.='"image":"'.$info[$i]["image"].'"}';
 	}
-	$result_json.='],';
+	$result_json.='],"Others": [';
 
 	$query = "select * from Questions where (s_id = '$s_id') AND (q_type > 3)";
 	$result = mysql_query($query);
