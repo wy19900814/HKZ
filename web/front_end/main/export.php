@@ -76,7 +76,7 @@
          <ul class="dropdown-menu">
           <li><a href="school.php">School</a></li>
           <li><a href="path.php">Path</a></li>
-          <li><a href="survey.php">Survey</a></li>
+          <li><a href="association.php">Association</a></li>
          </ul>
         </li>
         <li><a href="deployment.php">Deployment</a></li>
@@ -98,13 +98,18 @@
     </div>
     <div id="tree"></div>
     </div>
-    <div class="blank" style="height:100px"></div>
     <div class="col-md-9">
-      <div class="row">
-        <label class="col-md-1 col-md-offset-1">Survey</label>
-        <div class="col-md-5"><select class="form-control" id="svy_mod"></select></div>
-        <div class="col-md-2"><button type="button" class="btn btn-primary" id="exp">Export Survey</button></div>
-      </div><br>
+      <ul class="nav nav-tabs" id="export_tabs">
+        <li class="active"><a a href="#export" data-toggle="tab">Manage Deployment</a></li></ul>
+      <div class="tab-content">
+        <div class="tab-pane fade in active" id="export"><br>
+          <div class="row">
+            <label class="col-md-1 col-md-offset-1">Survey</label>
+            <div class="col-md-5"><select class="form-control" id="svy_mod"></select></div>
+            <div class="col-md-2"><button type="button" class="btn btn-primary" id="exp">Export Survey</button></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </body>

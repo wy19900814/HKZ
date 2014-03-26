@@ -92,8 +92,11 @@
 </div>
 <div class="col-md-6">
 <div class="jumbotron" id="lg"><form role="form">
-<div class="form-group"><label for="in_email">Email address</label>&nbsp;&nbsp;&nbsp;<span id="err1"></span> <input class="form-control" id="in_email" name="em" placeholder="Enter email" type="email" /> <label for="in_psw">Password</label>&nbsp;&nbsp;&nbsp;<span id="err2"></span> <input class="form-control" id="in_psw" name="ps" placeholder="Password" type="password" /></div>
-<center><input id="sub" class="btn btn-lg btn-primary" value="Submit" type="button" /><span class="hint"></span></center></form><a href="#title" id="link">Forgot Password?</a></div>
+<div class="form-group"><label for="in_email">Email address</label>&nbsp;&nbsp;&nbsp;<span id="err1"></span> 
+<input class="form-control" id="in_email" name="em" placeholder="Enter email" type="email" />
+<label for="in_psw">Password</label>&nbsp;&nbsp;&nbsp;<span id="err2"></span>
+<input class="form-control" id="in_psw" name="ps" placeholder="Password" type="password" /></div>
+<center><input id="sub" class="btn btn-lg btn-primary" value="Submit" type="button" /><span class="hint"></span></form><br><a href="#title" id="link">Forgot Password?</a></center></div>
 </div>
 </div>
 </div>

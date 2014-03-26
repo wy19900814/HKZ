@@ -26,8 +26,8 @@
 
   <script type="text/javascript">
       var geocoder;
-      var map;
-      var schlist;
+      var map,view_map;
+      var schlist,flag=false;
       
       $.ajax({
             url:"get_data.php",
@@ -41,7 +41,7 @@
             }
       });
       //initialize Google Map
-      function initialize(){
+      function initialize(element){
         geocoder=new google.maps.Geocoder();
         var latlng=new google.maps.LatLng(33.985865, -118.256250);
         var mapOptions={
@@ -49,7 +49,7 @@
           center:latlng,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
-        map=new google.maps.Map(document.getElementById("gm"),mapOptions);
+        map=new google.maps.Map(document.getElementById(element),mapOptions);
       };
       //google.maps.event.addDomListener(window, 'load', initialize);
 
@@ -62,6 +62,10 @@
             map:map,
             position:results[0].geometry.location
             });
+          }else{
+            flag=true;
+            $("#alrmodal_1").find('h4').text("The school address you have input returns invalid results.");
+            $("#alrmodal_1").modal('show');
           }
         });
     };
@@ -69,7 +73,7 @@
     function init_school(){
         init="";
         for(var i=0;i<schlist.Schools.length;i++){
-        init+='<tr><td>'+schlist.Schools[i].sch_id+'</td><td>'+schlist.Schools[i].sch_name+'</td><td>'+schlist.Schools[i].sch_address+'</td><td><div class="dropdown"><button class="btn dropdown-toggle" data-toggle="dropdown" type="button"><span class="caret"></span></button><ul class="dropdown-menu" role="menu"><li ><a href="#" class="modify">Modify Name</a></li><li><a href="#" class="del">Delete School</a></li></ul></div></td></tr>';
+        init+='<tr><td>'+schlist.Schools[i].sch_id+'</td><td>'+schlist.Schools[i].sch_name+'</td><td>'+schlist.Schools[i].sch_address+'</td><td><div class="dropdown"><button class="btn dropdown-toggle" data-toggle="dropdown" type="button"><span class="caret"></span></button><ul class="dropdown-menu" role="menu"><li><a href="#" class="modify">Modify Name</a></li><li><a href="#" class="view_sch">View School</a></li><li><a href="#" class="del">Delete School</a></li></ul></div></td></tr>';
         };
         $("#scl").html(init);
       };
@@ -90,8 +94,6 @@
           }
       });
       
-      
-
       //show school list in DB
       init_school();
 
@@ -100,7 +102,7 @@
         $(this).tab("show");
       });
       $("#sch_tabs a[href='#add']").on('shown.bs.tab',function(e){
-        initialize();
+        initialize("gm");
       });
       $("#sch_tabs a[href='#mod']").tab('show');
       $("#sch_tabs a[href='#mod']").on('shown.bs.tab',function(e){
@@ -141,7 +143,7 @@
         trigger: 'manual',
         placement: 'top',
         content: function() {
-            var  message="You must input the school address";
+            var  message="You must input the valid school address";
             return message;
         }
       });
@@ -153,7 +155,7 @@
       name=$("#sname").val();addr=$("#saddr").val();
       if(name==""){$('#sname').popover('show');}
       else{
-        if(addr==""){$('#saddr').popover('show');}
+        if(addr=="" || flag){$('#saddr').popover('show');}
         else{
           $.ajax({
             url:"school.php",
@@ -171,23 +173,38 @@
     //Modify School Name
     $("#scl").on('click','.modify',function(){
       var selected=$(this).closest("td");
-      $("#edit").html('<br><div class="form-group"><label for="mod_name" class="col-md-3" style="text-align:right">Change '+selected.siblings(":nth-child(2)").text()+' to: </label><div class="col-md-4"><input type="text" class="form-control" name="selected_sname" id="mod_name"></div><div class="col-md-2 col-md-offeset-1"><button type="submit" class="btn btn-primary" id="sub_change">Submit New Name</button></div>');   
+      $("#view_gm").hide();
+      $("#edit").html('<br><div class="form-group"><label for="mod_name" class="col-md-3" style="text-align:right">Change '+selected.siblings(":nth-child(2)").text()+' to: </label><div class="col-md-4"><input type="text" class="form-control" name="selected_sname" id="mod_name"></div><div class="col-md-2 col-md-offeset-1"><button type="button" class="btn btn-primary" id="sub_change">Submit New Name</button></div>');   
       $(document).on("click","#sub_change",function(){
-        $.ajax({
+        if($("#mod_name").val()==""){
+          $("#alrmodal_1").find('h4').text("Please input new school name");
+          $("#alrmodal_1").modal('show');
+        }else{
+          $.ajax({
           url:"school.php",
           cache: false,
           data:{newnm:$("#mod_name").val(),sid:selected.siblings(":nth-child(1)").text(),s_addr:selected.siblings(":nth-child(3)").text()},
           type:"POST",
           async:false
         });
-       <?php
+        <?php
         if(isset($_POST['newnm'])){school_modify($_POST['sid'],$_POST['newnm'],$_POST['s_addr']);}
-      ?>
-      window.location.reload();
+        ?>
+        window.location.reload();
+        } 
       }); 
     });
 
-    
+   $("#scl").on('click','.view_sch',function(){
+      $("#view_gm").show();
+      $("#edit").html("");
+      var selected=$(this).closest("td");
+      //alert(selected.siblings(":nth-child(3)").text());
+      initialize("view_gm");
+      codeAddress(selected.siblings(":nth-child(3)").text());
+      
+   });
+
    $("#scl").on('click','.del',function(){
       var selected=$(this).closest("td");
       $("#alrmodal").find("p").text("Do you really want to delete the school "+selected.siblings(":nth-child(2)").text()+" ?");
@@ -223,7 +240,7 @@
          <ul class="dropdown-menu">
           <li><a href="school.php">School</a></li>
           <li><a href="path.php">Path</a></li>
-          <li><a href="survey.php">Survey</a></li>
+          <li><a href="association.php">Association</a></li>
          </ul>
         </li>
         <li><a href="deployment.php">Deployment</a></li>
@@ -274,6 +291,7 @@
           </tbody>
         </table>
         <form role="form" class="form-horizontal" id="edit"></form>
+        <div class="row" id="view_gm" style="height:300px"></div>
         <div class="modal fade" id="alrmodal">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -289,6 +307,18 @@
         </div>
       <!--<div class="tab-pane fade" id="delete"></div> -->
     </div></div>
+    <div class="modal fade in" id="alrmodal_1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-body">
+              <h4></h4>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
   </div>
 </div>
 <noscript></body>

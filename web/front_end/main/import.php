@@ -73,15 +73,6 @@
         $("#dbtable").append('<tr><td>'+dblist.DBSurvey[j].s_id+'</td><td>'+dblist.DBSurvey[j].s_name+'</td><td>'+dblist.DBSurvey[j].date_created+'</td><td>'+dblist.DBSurvey[j].date_modified+'</td></tr>');
       }
 
-      //Initial the Duallistbox 
-      /*$("#slist").bootstrapDualListbox({
-      nonselectedlistlabel:"Survey Lists from Survey Monkey",
-      selectedlistlabel:'Survey Lists from Database',
-      preserveselectiononmove:'moved',
-      moveonselect:false
-      });*/
-
-      
       $("#mov").click(function(){
           var isurveys=$('#sml option:selected').val();
         /*  for(var i=0;i<dblist.DBSurvey.length;i++){
@@ -136,8 +127,8 @@
 <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">Configuration <b class="caret"></b></a>
 <ul class="dropdown-menu">
 <li><a href="school.php">School</a></li>
-<li><a href="path.php" target="ifr_b">Path</a></li>
-<li><a href="survey.php" target="ifr_b">Survey</a></li>
+<li><a href="path.php">Path</a></li>
+<li><a href="association.php">Association</a></li>
 </ul>
 </li>
 <li><a href="deployment.php">Deployment</a></li>
@@ -154,14 +145,14 @@
 <div class="row">
   <div class="col-md-5">
   <span class="info">Survey Monkey List</span>
-  <select multiple="multiple" class="form-control" size="10" id="sml" ></select></div>
+  <select class="form-control" size="10" id="sml" ></select></div>
   <div class="col-md-2"><center>
     <button type="button" class="btn btn-primary btn-lg" id="mov">Move</button><br><br>
     <button type="button" class="btn btn-default btn-lg" id="remov">Remove</button></center>
   </div>
   <div class="col-md-5">
   <span class="info">Database List</span>
-  <select multiple="multiple" class="form-control" size="10" id="dbl"></select></div>
+  <select class="form-control" size="10" id="dbl"></select></div>
   </div>
 <br><br>
 <div class="row">

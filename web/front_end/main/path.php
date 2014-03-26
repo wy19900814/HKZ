@@ -157,7 +157,7 @@
           for(var j=0;j<SPSList.Schools.length;j++){
           for(var i=0;i<SPSList.Schools[j].Paths.length;i++){
               tbl+='<tr><td>'+SPSList.Schools[j].Paths[i].p_id+'</td><td>'+SPSList.
-              Schools[j].Paths[i].p_name+'</td><td>( '+SPSList.Schools[j].Paths[i].s_latitude+', '+SPSList.Schools[j].Paths[i].s_longtitude+' )</td><td>( '+SPSList.Schools[j].Paths[i].e_latitude+', '+SPSList.Schools[j].Paths[i].e_longtitude+' )</td><td>'+SPSList.Schools[j].sch_id+'</td><td><input type="checkbox" class="check_path"></td></tr>';}}
+              Schools[j].Paths[i].p_name+'</td><td>( '+Math.round(SPSList.Schools[j].Paths[i].s_latitude*100)/100+', '+Math.round(SPSList.Schools[j].Paths[i].s_longtitude*100)/100+' )</td><td>( '+Math.round(SPSList.Schools[j].Paths[i].e_latitude*100)/100+',  '+Math.round(SPSList.Schools[j].Paths[i].e_longtitude*100)/100+' )</td><td>'+SPSList.Schools[j].sch_id+'</td><td><input type="checkbox" class="check_path"></td></tr>';}}
           tbl+='</tbody>';
           $("#all").attr("checked",false);
           $("#pthlist").html(tbl);
@@ -337,7 +337,7 @@
                 if(SPSList.Schools[j].Paths.length>0){
                 tbl='';
                 for(var i=0;i<SPSList.Schools[j].Paths.length;i++){
-                  tbl+='<tr><td>'+SPSList.Schools[j].Paths[i].p_id+'</td><td>'+SPSList.Schools[j].Paths[i].p_name+'</td><td>( '+SPSList.Schools[j].Paths[i].s_latitude+', '+SPSList.Schools[j].Paths[i].s_longtitude+' )</td><td>( '+SPSList.Schools[j].Paths[i].e_latitude+', '+SPSList.Schools[j].Paths[i].e_longtitude+' )</td><td>'+SPSList.Schools[j].sch_id+'</td><td><input type="checkbox" class="check_path"></td></tr>';
+                  tbl+='<tr><td>'+SPSList.Schools[j].Paths[i].p_id+'</td><td>'+SPSList.Schools[j].Paths[i].p_name+'</td><td>( '+Math.round(SPSList.Schools[j].Paths[i].s_latitude*100)/100+', '+Math.round(SPSList.Schools[j].Paths[i].s_longtitude*100)/100+' )</td><td>( '+Math.round(SPSList.Schools[j].Paths[i].e_latitude*100)/100+',  '+Math.round(SPSList.Schools[j].Paths[i].e_longtitude*100)/100+' )</td><td>'+SPSList.Schools[j].sch_id+'</td><td><input type="checkbox" class="check_path"></td></tr>';
                 };
                 tbl+='</tbody>';
                 $("#pthlist").html(tbl);
@@ -402,7 +402,7 @@
          <ul class="dropdown-menu">
           <li><a href="school.php">School</a></li>
           <li><a href="path.php">Path</a></li>
-          <li><a href="survey.php">Survey</a></li>
+          <li><a href="association.php">Association</a></li>
          </ul>
         </li>
         <li><a href="deployment.php">Deployment</a></li>
@@ -426,9 +426,9 @@
     </div>
     <div class="col-md-9">
       <ul class="nav nav-tabs" id="path_tabs">
-        <li class="active"><a href="#mod" data-toggle="tab">Modify Path</a></li>
+        <li class="active"><a href="#mod" data-toggle="tab">Delete Path</a></li>
         <li><a href="#add" data-toggle="tab">Add Path</a></li>
-        <li><a href="#dip" data-toggle="tab">Display Path</a></li>
+        <li><a href="#dip" data-toggle="tab">Modify Path</a></li>
       <!--  <li><a href="#delete" data-toggle="tab">Delete School</a></li> -->
       </ul>
 
