@@ -66,5 +66,5 @@
 			echo ",\n";
 		}
 	}
-	survey_export("46973666");
+	survey_export($_GET['s_id']);
 ?>
