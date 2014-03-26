@@ -3,6 +3,9 @@
  *  survey_export.php  by Toni  03/25/2014
  */
 	function survey_export($s_id) {	
+		header("Content-Type: text/plain");
+		//header('Content-type: application/octet-stream');
+		//header('Content-Disposition: attachment; filename="filename.csv"');
 		$address="68.178.143.53";
 		$username="uschkz";
 		$password="Team14!hkz";
@@ -24,12 +27,12 @@
 		}
 		$info_q = array();
 		while($row_q = mysql_fetch_assoc($result_q)) $info_q[] = $row_q;
-
+		echo "latitude,longtitude,";
 		for ($j=0; $j<count($info_q); $j++) {
 			$q_id = $info_q[$j]['q_id'];
-			echo $q_id.",";
+			echo "Q_".$q_id.",";
 		}
-		echo "<br/>";
+		echo "\n";
 		$query_p = "select p_id from Associates where s_id = '$s_id'";
 		$result_p = mysql_query($query_p);
 		if($result_p === FALSE) {
@@ -60,7 +63,7 @@
 					echo $info_a[0];
 				else echo "-9";
 			}
-			echo ",<br/>";
+			echo ",\n";
 		}
 	}
 	survey_export("46973666");
