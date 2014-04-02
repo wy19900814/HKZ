@@ -51,7 +51,7 @@
 				$result_json.='"e_latitude":"'.$info_p[$j]["e_latitude"].'",';
 				$result_json.='"num_block":"'.$info_p[$j]["num_block"].'",';
 				$result_json.='"Surveys":[';
-				$query_s = "select s.s_id, s_name from Surveys s, Associates a where (a.s_id = s.s_id) AND (p_id = '$p_id') ";
+				$query_s = "select s.s_id, s_name, deployed from Surveys s, Associates a where (a.s_id = s.s_id) AND (p_id = '$p_id') ";
 				$result_s = mysql_query($query_s);
 				if($result_s === FALSE) {
 					die(mysql_error()); 
@@ -60,7 +60,7 @@
 				while($row_s = mysql_fetch_assoc($result_s)) $info_s[] = $row_s;
 				$flag = 0;
 				for($k = 0; $k < count($info_s); $k++) {
-					if ($info_s[$k]["deployed"] != 0) {
+					if ($info_s[$k]["deployed"] == 1) {
 						if ($flag > 0) $result_json.=','; 
 						else $flag = 1;
 						$result_json.='{';
