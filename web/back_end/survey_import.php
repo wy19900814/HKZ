@@ -147,7 +147,7 @@ function survey_import($s_id) {
 			$date_modified = mysql_real_escape_string($surveydetails->data->date_modified);
 			$num_response  = 0;
 			$num_question  = $surveydetails->data->question_count;
-			$deployed 	   = 0;
+			$deployed 	   = 1;
 			$query = "insert into Surveys(s_id, s_name, date_created, date_modified, num_response, num_question, deployed) values('$s_id', '$s_name', '$date_created', '$date_modified', '$num_response', '$num_question', '$deployed')";
 			$result = mysql_query($query);
 			if($result === FALSE) {
