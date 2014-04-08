@@ -46,12 +46,6 @@
             }
       });   
 
-      $('#tree').dynatree({
-          initAjax:{
-              url: "test.json"
-          }
-      }); 
-
       init_s('#svy_mod');
 
       $("#exp").click(function(){
@@ -92,7 +86,7 @@
       <h3 class="panel-title">Survey Configuration</h3>
     </div>
     <div class="panel-body">
-      <p>In survey export part, administrators can add a school, a path and associate them with surveys to be deployed. Also, administrators can modify or delete a school and a path.</p>
+      <p>In survey export part, administrators can export result data of a selected survey into a csv format file.</p>
       <p><a class="btn btn-primary" role="button">Learn more</a></p>
     </div>
     </div>
