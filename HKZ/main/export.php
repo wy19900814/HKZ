@@ -53,6 +53,10 @@
           window.open('survey_export.php?s_id='+s_id);
       });
 
+      $("#exp_mar").click(function(){
+          window.open('marker_export.php');
+      });
+
     }); 
   </script>
 <body>
@@ -90,17 +94,17 @@
       <p><a class="btn btn-primary" role="button">Learn more</a></p>
     </div>
     </div>
-    <div id="tree"></div>
     </div>
     <div class="col-md-9">
       <ul class="nav nav-tabs" id="export_tabs">
-        <li class="active"><a a href="#export" data-toggle="tab">Manage Deployment</a></li></ul>
+        <li class="active"><a a href="#export" data-toggle="tab">Export</a></li></ul>
       <div class="tab-content">
         <div class="tab-pane fade in active" id="export"><br>
           <div class="row">
             <label class="col-md-1 col-md-offset-1">Survey</label>
             <div class="col-md-5"><select class="form-control" id="svy_mod"></select></div>
             <div class="col-md-2"><button type="button" class="btn btn-primary" id="exp">Export Survey</button></div>
+            <div class="col-md-2"><button type="button" class="btn btn-primary" id="exp_mar">Export Marker</button></div>
           </div>
         </div>
       </div>

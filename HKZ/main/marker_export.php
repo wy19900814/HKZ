@@ -22,7 +22,7 @@
 	}
 	$info = array();
 	while($row = mysql_fetch_assoc($result)) $info[] = $row;
-	echo "path_name,marker_latitude,marker_longtitude,comment,";
+	echo "path_name,marker_latitude,marker_longtitude,comment,\n";
 	for ($i=0; $i < count($info); $i++) { 
 		echo $info[$i]['p_name'].','.$info[$i]['m_latitude'].','.$info[$i]['m_longtitude'].','.$info[$i]['comment'].",\n";
 	}
