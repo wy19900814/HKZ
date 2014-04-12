@@ -14,7 +14,7 @@
 	if (!$db_selected) {
 	  die ('Can\'t use db : ' . mysql_error());
 	}	
-	$query = "update Questions set url = '$url' where q_id = '$q_id'";
+	$query = "update Questions set image = '$url' where q_id = '$q_id'";
 	$result = mysql_query($query);
 	if($result === FALSE) {
 		die(mysql_error()); 
