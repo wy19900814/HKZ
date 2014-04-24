@@ -13,11 +13,28 @@ function onDeviceReady() {
 function eventBackButton(){alert("Please press the back button on the screen");}
 
 function getNewSurvey(){
-	if($("#schoolUrl").length>0&&localStorage.getItem("json_sps_str")!=""){
-		location="#schoolUrl";
-	}else{
-		getSchools();
-	}
+    var survey_index=localStorage.getItem('survey_index');
+    //alert(survey_index);
+    //alert(localStorage.getItem('ss'));
+    if(survey_index!=""&&survey_index!=null){
+        var r=confirm("There is a local survey now. Are you sure to start a new survey?");
+        if(r==true){
+            reset();
+            if($("#schoolUrl").length>0&&localStorage.getItem("json_sps_str")!=""){
+                location="#schoolUrl";
+            }else{
+                getSchools();
+            }
+        }else{
+            location="#homepage";
+        }
+    }else{
+        if($("#schoolUrl").length>0&&localStorage.getItem("json_sps_str")!=""){
+            location="#schoolUrl";
+        }else{
+            getSchools();
+        }
+    }	
 }
 function getLocalSurvey(){
 	var survey_index=localStorage.getItem('survey_index');
@@ -51,7 +68,7 @@ function getSchools(){
             opacity: .5, 
             color: '#fff' 
         } }); 
-    setTimeout($.unblockUI, 1500); 
+    setTimeout($.unblockUI, 2500); 
     if(localStorage.getItem('json_answer_str')==""||localStorage.getItem('json_answer_str')==null){
         json_answer_str="{\"Answers\":[]}";
         localStorage.setItem('json_answer_str',json_answer_str);
@@ -114,7 +131,7 @@ function getPaths(sch_index){
 	var page = "<div data-role='page' id='pathUrl_"+sch_index+"' data-url=pathUrl_" + sch_index + " data-theme='c' data-rel='back'><div data-role='header' data-theme='b'><a href='#' data-theme='b' data-icon='back' class='ui-btn-left' id='back_to_school_list'>back</a><h1>" + "Path List" + "</h1></div><div data-role='content'><ul data-role='listview' data-inset='false' id='path-list'>";
 	for (var i = 0; i < paths.length; i++) {
 		if(json_sps.Schools[school_index].Paths[i].Surveys.length>0){	
-			page = page + '<li><a href="javascript:void(0)" onclick="getSurveys(\'' + i + '\')">' + paths[i].p_name + '</a></li>';
+			page = page + '<li><a href="javascript:void(0)" onclick="showPath(\'' + i + '\')">' + paths[i].p_name + '</a></li>';
 		}
     }    
     page+="</ul></div>";
@@ -132,8 +149,33 @@ function getPaths(sch_index){
     	//this.remove(); 	
     });
 }
+function showPath(pa_index){
+    path_index=pa_index;
+    localStorage.setItem("path_index",pa_index);
+    school_index=localStorage.getItem("school_index");
+    //alert(path_index);
 
+    location="#directions_map";
+    $("#do_survey").click(function(){
+        if($("#surveyUrl_"+path_index+"_"+school_index).length>0){
+           this.href="#surveyUrl_"+path_index+"_"+school_index;
+        }else{
+            getSurveys(pa_index);
+        }
+    });
+    $("#reselect_path").click(function(){
+        if($("#pathUrl_"+school_index).length>0){
+            this.href="#pathUrl_"+school_index;
+        }else{
+            getPaths(school_index);
+        } 
+    });
+
+
+
+}
 function getSurveys(pa_index){
+
 	path_index=pa_index;
 	localStorage.setItem("path_index",pa_index);
 	school_index=localStorage.getItem("school_index");
@@ -150,7 +192,7 @@ function getSurveys(pa_index){
 
 	var surveys=json_sps.Schools[school_index].Paths[path_index].Surveys;
 	var num_b=json_sps.Schools[school_index].Paths[path_index].num_block;
-	var page = "<div data-role='page' id='surveyUrl_"+path_index+"_"+school_index+"' data-url=surveyUrl_" + path_index +"_"+school_index +" data-theme='c'><div data-role='header' data-theme='b'><a href='#' data-theme='b' data-icon='back' class='ui-btn-left' id='back_to_path_list'>back</a><h1>" + "Survey List" + "</h1></div><div data-role='content'><ul data-role='listview' data-inset='false' id='survey-list'>";
+	var page = "<div data-role='page' id='surveyUrl_"+path_index+"_"+school_index+"' data-url=surveyUrl_" + path_index +"_"+school_index +" data-theme='c'><div data-role='header' data-theme='b'><a href='#' data-theme='b' data-icon='back' class='ui-btn-left' id='back_to_path_list'>back</a><h1>" + "Survey List" + "</h1><a href='#' data-theme='b' data-icon='forward' class='ui-btn-right' id='view_path'>View path</a></div><div data-role='content'><ul data-role='listview' data-inset='false' id='survey-list'>";
     for (var i = 0; i < surveys.length; i++) {
         page = page + '<li><a href="javascript:void(0)" onclick="getCatagory(\'' + i + '\')">' + surveys[i].s_name + '</a></li>';
     }
@@ -169,9 +211,17 @@ function getSurveys(pa_index){
     	} 	
     	//this.remove();
     });
+    $("#view_path").click(function(){
+        showPath(pa_index);
+    });
 }
 
 function getCatagory(sur_index){
+    var old_survey_index=localStorage.getItem("survey_index");
+    var new_survey_index=sur_index;
+    if(old_survey_index!=new_survey_index){
+        localStorage.setItem("json_answer_str","{\"Answers\":[]}");
+    }
     survey_index=sur_index;    
     localStorage.setItem("survey_index",survey_index);
     school_index=localStorage.getItem("school_index");
@@ -214,13 +264,25 @@ function getCatagory(sur_index){
     
     	for (var i = 0; i < num_b&&json_question.Questions.Blocks.length>0; i++) {
         	var j=i+1;
+            if($("#block"+j).length>0){
+                $("#block"+j).remove();
+                //alert("remove1");
+            }
             page = page + '<li><a href="javascript:void(0)" id="block'+j+'" onclick="getBlockFirstQues(\'' + i + '\')">' + 'block' +j+ '</a></li>';
             //alert("hello");
         }    	
     	if(json_question.Questions.Tallies.length>0){
+            if($("#Tally").length>0){
+                $("#Tally").remove();
+                //alert("remove2");
+            }
     		page = page + '<li><a href="javascript:void(0)" id="Tally" onclick="getTallyQues(0)">' + 'Tally' +'</a></li>';
     	}
     	if(json_question.Questions.Others.length>0){
+            if($("#Other").length>0){
+                $("#Other").remove();
+                //alert("remove3");
+            }
     		page = page + '<li><a href="javascript:void(0)" id="Other" onclick="getOtherQues(0)">' + 'Other' + '</a></li>';
     	}
     	if(json_question.Questions.Blocks.length==0&&json_question.Questions.Tallies.length==0&&json_question.Questions.Others.length==0){
@@ -243,6 +305,7 @@ function getCatagory(sur_index){
             	}
             	//this.remove();
     	    });
+
             var json_answer_str=localStorage.getItem("json_answer_str");
             var json_answer=JSON.parse(json_answer_str);
             //alert(json_answer_str);
@@ -252,19 +315,24 @@ function getCatagory(sur_index){
             for(var k=0;k<num_b+1;k++){
                 question_arr[k+1]=0//question_arr[1] means No. 1 block
                 for(var qi=0;qi<json_answer.Answers.length;qi++){
-                    if(json_answer.Answers[qi].block_id==k+1){
+                    if(json_answer.Answers[qi].block_id==k+1&&json_answer.Answers[qi].a_content!=""&&json_answer.Answers[qi].a_content!="undefined"){
                         question_arr[k+1]++;
                     }
-                    if(json_answer.Answers[qi].block_id==0){
+                    if(json_answer.Answers[qi].block_id==0&&json_answer.Answers[qi].a_content!=""&&json_answer.Answers[qi].a_content!="undefined"){
                         question_arr[num_b+1]++;
                     }
                 }
-                if(question_arr[k+1]==json_question.Questions.Blocks.length){
+                if(question_arr[k+1]==json_question.Questions.Blocks.length&&old_survey_index==new_survey_index){
                     $("#block"+parseInt(k+1)).css("color","red");
+                }else{
+                    $("#block"+parseInt(k+1)).css("color","black");
                 }
-                if(question_arr[num_b+1]==json_question.Questions.Others.length+json_question.Questions.Tallies.length){
+                if(question_arr[num_b+1]==json_question.Questions.Others.length+json_question.Questions.Tallies.length&&old_survey_index==new_survey_index){
                     $("#Tally").css("color","red");
                     $("#Other").css("color","red");
+                }else{
+                    $("#Tally").css("color","black");
+                    $("#Other").css("color","black");
                 }
             }
 

@@ -39,7 +39,12 @@ function getBlockOneQues(block_index,question_index){
 	var questions=json_question.Questions;
 	var options=json_question.Questions.Blocks[question_index].options;
 
+
 	page=page+'<label>'+questions.Blocks[question_index].q_heading+'</label>';
+    if(questions.Blocks[question_index].image!=""){
+        page=page+'<img src="'+questions.Blocks[question_index].image+'" width=100% height=50% >';
+    }
+    
 	page=page+"<form>";
 	if(questions.Blocks[question_index].q_type==1){
 	    //q_type=1 means single_choice, q_type==2 means mutiple_choice
@@ -136,20 +141,18 @@ function getBlockOneQues(block_index,question_index){
      		question_index++;
      		if(question_index<block_ques_len){
      			//remove_block_btn(block_old_index,question_old_index);
-     			nextQues(block_index,question_index);
-
-     			
+     			nextQues(block_index,question_index);    			
      		}else{
      			question_index=0;
      			block_index++;
-     			if(block_index<block_len){
+     			if(block_index<block_len){                  
                     alert("The following is next block questions!");
-                    $("#block"+block_index).css('color','red');
+                    setBlockFontRed(block_index);
                     //remove_block_btn(block_old_index,question_old_index);
                     nextQues(block_index,question_index);
      			}else{
      				alert("The following is tally questions");
-                    $("#block"+block_index).css('color','red');
+                    setBlockFontRed(block_index);
      				//remove_block_btn(block_old_index,question_old_index);
          			getTallyQues(0);         			                                      				
      			}
@@ -157,6 +160,25 @@ function getBlockOneQues(block_index,question_index){
      	}
      	//remove_block_btn(block_old_index,question_old_index);
     });
+}
+function setBlockFontRed(block_index){
+    var json_answer_str=localStorage.getItem("json_answer_str");
+    var json_answer=JSON.parse(json_answer_str);
+    //alert(json_answer_str);
+    var count=0;
+    for(var qi=0;qi<json_answer.Answers.length;qi++){
+        if(json_answer.Answers[qi].block_id==block_index&&json_answer.Answers[qi].a_content!=""&&json_answer.Answers[qi].a_content!="undefined"){
+            count++;
+        }
+    }
+    //alert(count);
+    if(count==json_question.Questions.Blocks.length){
+         //alert(count);
+        $("#block"+parseInt(block_index)).css("color","red");
+    }else{
+        //alert(count);
+        $("#block"+parseInt(block_index)).css("color","black");
+    }
 }
 function nextQues(block_index,question_index){
    getBlockOneQues(block_index,question_index);

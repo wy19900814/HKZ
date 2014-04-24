@@ -41,3 +41,14 @@ label{
 	font-size:15px;
 	width:100%;
 }
+a { text-decoration: none; } 
+#directions_map{
+    height: 100%;
+    
+}
+#path_content{
+    height: 80%;
+}
+#map_canvas_1{
+    height: 80%;
+}

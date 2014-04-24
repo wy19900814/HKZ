@@ -121,6 +121,7 @@
                 };
               }
         $('#pth').html(init);
+        $("#pth").trigger("change");
       });
 
       $("#pth").change(function(){
@@ -171,8 +172,6 @@
             $("#unasso").html(left_box);
             }else{
               init_survey("#unasso");
-              /*$("#alrmodal_1").find('h4').text("There is no associated survey");
-              $("#alrmodal_1").modal('show');*/
             }
           }
           $("#asso").html(init);
@@ -187,10 +186,11 @@
             $("#alrmodal_1").find('h4').text("Please select at least one survey.");
             $("#alrmodal_1").modal('show');
           }else{
+              ssur=$("#unasso option:selected").val();
               if($("#pth option:selected").val()!=-2){
                 $.ajax({
                     url:"association.php",
-                    data:{a_survey:$("#unasso option:selected").val(),pth_one:$("#pth option:selected").val()},
+                    data:{a_survey:ssur,pth_one:$("#pth option:selected").val()},
                     type:"POST",
                     async:false,
                     success:function(data){}
@@ -199,13 +199,20 @@
                   association_add($_POST['pth_one'],$_POST['a_survey']);}
                 ?>
               }else{
-                j=find_sch("#sch");arr=[];
+                j=find_sch("#sch");arr=[];count=0;
                 for(var i=0;i<SPSList.Schools[j].Paths.length;i++){
-                  arr[i]=SPSList.Schools[j].Paths[i].p_id;
+                  var flag=0;
+                  for(var k=0;k<SPSList.Schools[j].Paths[i].Surveys.length;k++){
+                    if(SPSList.Schools[j].Paths[i].Surveys[k].s_id==ssur){flag=1;break;}
+                  }
+                  if(!flag){
+                    arr[count]=SPSList.Schools[j].Paths[i].p_id;
+                    count++;
+                  }
                 };
                 $.ajax({
                     url:"association.php",
-                    data:{a_survey:$("#unasso option:selected").val(),pths:arr},
+                    data:{a_survey:ssur,pths:arr},
                     type:"POST",
                     async:false
                   });
@@ -216,9 +223,12 @@
                   }
                 }?>
               }
+             former_sch=$("#sch option:selected").val();
+             former_pth=$("#pth option:selected").val();
              get_association();
              init_school("#sch");
-             $("#sch").trigger("change");$("#pth").trigger("change");
+             $("#sch").val(former_sch);$("#sch").trigger("change");
+             $("#pth").val(former_pth);$("#pth").trigger("change");
           }
       });
 
@@ -236,7 +246,8 @@
                     url:"association.php",
                     data:{u_survey:$("#asso option:selected").val(),pth_uone:$("#pth option:selected").val()},
                     type:"POST",
-                    async:false
+                    async:false,
+                    success:function(data){} 
                   });
                 <?php if(isset($_POST['pth_uone'])){
                     association_delete($_POST['pth_uone'], $_POST['u_survey']);}?>
@@ -258,10 +269,13 @@
                   }
                 }?>
               } 
+             former_sch=$("#sch option:selected").val();
+             former_pth=$("#pth option:selected").val();
              get_association();
              $("#alrmodal_2").modal('hide');
              init_school("#sch");
-             $("#sch").trigger("change");$("#pth").trigger("change");
+             $("#sch").val(former_sch);$("#sch").trigger("change");
+             $("#pth").val(former_pth);$("#pth").trigger("change");
             });
           }
       });
@@ -287,7 +301,7 @@
         	</li>
         	<li><a href="deployment.php">Deployment</a></li>
         	<li><a href="export.php">Export</a></li>
-        	<li><a href="">Log out</a></li>
+        	<li><a href="../index.php">Log out</a></li>
         </ul></div>
       	</nav>
   	  </nav>

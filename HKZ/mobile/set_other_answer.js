@@ -1,3 +1,4 @@
+var previous_option_length=null;
 function getOtherQues(otherQuesIndex){
     remove_other_btn(otherQuesIndex);
     localStorage.setItem('current_survey_page',"OtherQuesUrl_"+otherQuesIndex);
@@ -27,6 +28,10 @@ function getOtherQues(otherQuesIndex){
 	var page = "<div data-role='page' data-url=OtherQuesUrl_"+otherQuesIndex+"_"+survey_index+"_"+path_index+"_"+school_index+" data-theme='c' data-add-back-btn='true' id='OtherQuesUrl_"+otherQuesIndex+"_"+survey_index+"_"+path_index+"_"+school_index+"'><div data-role='header' data-theme='b'><a href='#' data-theme='b' data-icon='back' class='ui-btn-left' id='previous_ques'>back</a><h1>" + "Others" + "</h1><a href='#' data-theme='b' data-icon='forward' class='ui-btn-right' id='next_ques'>next</a></div><div data-role='content'>";  
 
 	page=page+'<label>'+other_ques[otherQuesIndex].q_heading+'</label>';
+    if(other_ques[otherQuesIndex].image!=""){
+        page=page+'<img src="'+other_ques[otherQuesIndex].image+'" width=100% height=50%>';
+    }
+    
 	page=page+"<form>";
 
 	var options=jsonObj_ques.Questions.Others[otherQuesIndex].options;
@@ -34,6 +39,7 @@ function getOtherQues(otherQuesIndex){
 	//4 :single-choice 5: multi-choice
 	if(other_ques[otherQuesIndex].q_type==4){
 	    for (var i = 0; i < options.length; i++) {
+
 	        page = page + '<input type=\"radio\" name=\"option_'+otherQuesIndex+'\" id=\"other_radio-choice-0'+i+'\" value=\"'+options[i].o_id+'\" ';
 			for(var j=0;j<option_ans_arr.length;j++){
 			    if(options[i].o_id==option_ans_arr[j]){
@@ -45,7 +51,17 @@ function getOtherQues(otherQuesIndex){
 	}
 
     else if(other_ques[otherQuesIndex].q_type==5){
+        //alert(previous_option_length);
+        //alert(options.length);
+        for(var pi=0;pi<previous_option_length;pi++){
+            if($("#other_checkbox-choice-0"+pi).length>0){
+                $("#other_checkbox-choice-0"+pi).remove();
+                //alert("remove");
+            }
+        }
+        
         for (var i = 0; i < options.length; i++) {
+            
             page = page + '<input type=\"checkbox\" name=\"option_'+otherQuesIndex+'\" id=\"other_checkbox-choice-0'+i+'\" value=\"'+options[i].o_id+'\"';
             for(var j=0;j<option_ans_arr.length;j++){
 			    if(options[i].o_id==option_ans_arr[j]){
@@ -54,6 +70,8 @@ function getOtherQues(otherQuesIndex){
 			}
             page=page+'><label for=\"other_checkbox-choice-0'+i+'\">'+options[i].o_text+'</label>';
         }
+        previous_option_length=options.length;
+
     }
     
     page = page + "</form></div>";
@@ -134,7 +152,7 @@ function getOtherQues(otherQuesIndex){
     	}else{
     		otherQuesIndex=0;
             alert("It is the end of other questions!");
-            $("#Other").css("color","red");
+            setTallyAndFontRed();
             if($("#catagoryUrl_"+survey_index+"_"+path_index+"_"+school_index).length>0&&localStorage.getItem("json_question_str")!=""){
             	location="#catagoryUrl_"+survey_index+"_"+path_index+"_"+school_index;
             }else{

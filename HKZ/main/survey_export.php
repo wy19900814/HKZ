@@ -6,7 +6,7 @@
 		//header("Content-Type: text/plain");
 		$filename = date('Y-m-d H:i:s');
 		header('Content-type: application/octet-stream');
-		header('Content-Disposition: attachment; filename="survey_result_'.$filename.'.csv"');
+		header('Content-Disposition: attachment; filename="'.$filename.'.csv"');
 		$address="68.178.143.53";
 		$username="uschkz";
 		$password="Team14!hkz";

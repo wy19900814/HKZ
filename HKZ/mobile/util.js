@@ -6,6 +6,44 @@
 //json_sps_str
 //json_question_str
 
+var mobileDemo = { 'center': '57.7973333,12.0502107', 'zoom': 10 };           
+$('#directions_map').live('pageinit', function() {
+    //alert("ehl");
+    demo.add('directions_map', function() {
+       // alert("ee");
+        $('#map_canvas_1').gmap({'center': mobileDemo.center, 'zoom': mobileDemo.zoom, 'disableDefaultUI':true, 'callback': function() {
+            var self = this;
+            self.set('getCurrentPosition', function() {
+                self.refresh();
+                self.getCurrentPosition( function(position, status) {
+                    if ( status === 'OK' ) {
+                        json_sps=JSON.parse(localStorage.getItem("json_sps_str"));
+                        school_index=localStorage.getItem("school_index");
+                        path_index=localStorage.getItem("path_index");
+                        var path=json_sps.Schools[school_index].Paths[path_index];
+                        var s_latlng = path.s_latitude+','+path.s_longtitude;
+                        var e_latlng = path.e_latitude+','+path.e_longtitude;
+                        //self.get('map').panTo(latlng);
+                        //$('#from').val("2658 Menlo, Ave., la, ca, us");
+                        self.displayDirections({ 'origin': s_latlng, 'destination': e_latlng, 'travelMode': google.maps.DirectionsTravelMode.WALKING }, { 'panel': document.getElementById('directions')}, function(response, status) {
+                            ( status === 'OK' ) ? $('#results').show() : $('#results').hide();
+                        });
+                    } else {
+                        alert('Unable to get current position');
+                    }
+                });
+            });
+        }});
+    }).load('directions_map');
+});
+
+$('#directions_map').live('pageshow', function() {
+    demo.add('directions_map', $('#map_canvas_1').gmap('get', 'getCurrentPosition')).load('directions_map');
+    //alert("ehl");
+});
+            
+
+
 function reset(){
     jsonObj_sps=null;
     jsonObj_ques=null;
@@ -44,9 +82,9 @@ function add_navbar(a_page){
     return page;
 }
 function get_all_index(){
-	school_index=localStorage.getItem("school_index",school_index);
-	survey_index=localStorage.getItem("survey_index",survey_index);
-	path_index=localStorage.getItem("path_index",path_index);
+	school_index=localStorage.getItem("school_index");
+	survey_index=localStorage.getItem("survey_index");
+	path_index=localStorage.getItem("path_index");
 }
 
 function create_reset_block_dialog(block_index,question_index){
@@ -218,15 +256,30 @@ function submit(){
             }
         }
        
-        var data = { json_answer_str: json_answer_str };
+        
         //http://letsallgetcovered.org/HKZ/store_answers_to_db.php
-        //http://localhost/version1/part3/store_answers_to_db.php
-        $.post("http://letsallgetcovered.org/lets6502/hkz_v1/main/post_answers.php", data, function(response){
+        var url="http://letsallgetcovered.org/lets6502/hkz_v1/main/post_answer_and_marker.php";
+
+        json_answer_str=localStorage.getItem('json_answer_str');
+        json_marker_str=localStorage.getItem('json_marker_str');
+        //alert(json_marker_str);
+        var json_answer_and_marker_str="{\"Content\":{"+json_answer_str.substring(1,json_answer_str.length-1)+","+json_marker_str.substring(1,json_marker_str.length)+"}";
+        var json_answer_and_marker=JSON.parse(json_answer_and_marker_str);
+        //alert(json_answer_and_marker.Content.Markers[0].m_latitude);
+        var data = { json_answer_and_marker_str: json_answer_and_marker_str };
+
+        $.post(url, data, function(response){
             fadingMsg(response);
             setTimeout(function(){this.href="#homepage";
             location=this.href;},2000);
             reset();
         });
+       /* $.post("http://letsallgetcovered.org/lets6502/hkz_v1/main/post_answers.php", data, function(response){
+            fadingMsg(response);
+            setTimeout(function(){this.href="#homepage";
+            location=this.href;},2000);
+            reset();
+        });*/
     });
     //this.remove();
 }

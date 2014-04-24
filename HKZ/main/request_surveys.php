@@ -75,5 +75,4 @@
 		$result_json.=']}';
 		return $result_json;
 	}
-	echo get_SPS();
 ?>

@@ -1,14 +1,11 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width">
 		<title>
 			HKZ
 		</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<style type="text/css">
-			a { text-decoration: none; } 
-		</style>
 		
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css"/>
 		<script src="http://code.jquery.com/jquery-1.7.1.min.js">
@@ -17,13 +14,15 @@
 		</script>
 
 
-
+<style type="text/css">
+	#page-map, #map-content, #map_canvas { width: 100%; height: 100%; padding: 0; }
+	</style>
     <!-- <link rel="stylesheet" href="jquery.mobile/jquery.mobile-1.1.0.css" type="text/css"> -->
 	<link rel="stylesheet" href="tmt4p2.css" type="text/css">
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 	<!-- <script type="text/javascript" src="jquery.mobile/jquery-1.7.2.min"></script> -->
 	
-	
+	<script type="text/javascript" src="demo.js"></script>
 	<script type="text/javascript" src="jquery.ui.map/jquery.ui.map.js"></script>
 	<script type="text/javascript" src="jquery.ui.map/jquery.ui.map.services.js"></script>
 	<script type="text/javascript" src="jquery.ui.map/jquery.ui.map.extensions.js"></script>
@@ -48,12 +47,9 @@
 					CHC
 				</h1>
 			</div>
-			<div data-role="content" align="center">
-				<h2>
-					Health Kid Zone
-				</h2>
-			</div>
+			
 			<div data-role="content">
+				<img src="http://letsallgetcovered.org/lets6502/hkz_v1/image/HKZlogoFINAL.PNG" width="100%" height="63%" >
 				
 					<button class="ui-btn" onclick="getNewSurvey()">
 						New Survey
@@ -81,11 +77,11 @@
 			</div>
 			</div>
 			
-			</div><!-- /content -->
+			</div>
 			
-			</div><!-- /page-map -->
+			</div>
 
-			<div data-role="page" data-theme="c" id="page-marker">
+		<div data-role="page" data-theme="c" id="page-marker">
 
 			<div data-role="content">
 
@@ -117,6 +113,23 @@
 			</div>
 	
 		</div><!-- /page-marker -->
+
+		<div id="directions_map" data-role="page" data-theme="c">
+			<div data-role="header" data-theme="b">
+				<h1>CHC</h1>
+				<a href='#' data-theme='b' data-icon='back' class='ui-btn-left' id='reselect_path'>Reselect Path</a>
+				<a href='#' data-theme='b' data-icon='forward' class='ui-btn-right' id='do_survey'>Do Survey</a>
+			</div>
+			<div data-role="content" id="path_content">	
+				<label>Please comfirm it is the correct path.</label>;
+				<br/><br/>
+				
+					<div id="map_canvas_1" ></div>
+				
+				
+			</div>
+		</div>
+
 
 
 		

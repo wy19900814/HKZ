@@ -168,7 +168,7 @@
           for(var j=0;j<SPSList.Schools.length;j++){
           for(var i=0;i<SPSList.Schools[j].Paths.length;i++){
               tbl+='<tr><td>'+SPSList.Schools[j].Paths[i].p_id+'</td><td>'+SPSList.
-              Schools[j].Paths[i].p_name+'</td><td>( '+Math.round(SPSList.Schools[j].Paths[i].s_latitude*100)/100+', '+Math.round(SPSList.Schools[j].Paths[i].s_longtitude*100)/100+' )</td><td>( '+Math.round(SPSList.Schools[j].Paths[i].e_latitude*100)/100+',  '+Math.round(SPSList.Schools[j].Paths[i].e_longtitude*100)/100+' )</td><td>'+SPSList.Schools[j].sch_name+'</td><td><input type="checkbox" class="check_path"></td></tr>';}}
+              Schools[j].Paths[i].p_name+'</td><td>( '+Math.round(SPSList.Schools[j].Paths[i].s_latitude*100)/100+', '+Math.round(SPSList.Schools[j].Paths[i].s_longtitude*100)/100+' )</td><td>( '+Math.round(SPSList.Schools[j].Paths[i].e_latitude*100)/100+',  '+Math.round(SPSList.Schools[j].Paths[i].e_longtitude*100)/100+' )</td><td>'+SPSList.Schools[j].sch_name+'</td><td>'+SPSList.Schools[j].Paths[i].num_block+'</td><td><input type="checkbox" class="check_path"></td></tr>';}}
           tbl+='</tbody>';
           $("#all").attr("checked",false);
           $("#pthlist").html(tbl);
@@ -211,7 +211,7 @@
             initialize("gm_view");
           });
           $("#path_tabs a[href='#add']").on('shown.bs.tab', function(e){
-            initialize('gm');
+            initialize('gm');path_points=[];
             marker_enable(map);
             init_school("#schs");
             $('#gm').popover('show');
@@ -387,7 +387,7 @@
                 if(SPSList.Schools[j].Paths.length>0){
                 tbl='';
                 for(var i=0;i<SPSList.Schools[j].Paths.length;i++){
-                  tbl+='<tr><td>'+SPSList.Schools[j].Paths[i].p_id+'</td><td>'+SPSList.Schools[j].Paths[i].p_name+'</td><td>( '+Math.round(SPSList.Schools[j].Paths[i].s_latitude*100)/100+', '+Math.round(SPSList.Schools[j].Paths[i].s_longtitude*100)/100+' )</td><td>( '+Math.round(SPSList.Schools[j].Paths[i].e_latitude*100)/100+',  '+Math.round(SPSList.Schools[j].Paths[i].e_longtitude*100)/100+' )</td><td>'+SPSList.Schools[j].sch_name+'</td><td><input type="checkbox" class="check_path"></td></tr>';
+                  tbl+='<tr><td>'+SPSList.Schools[j].Paths[i].p_id+'</td><td>'+SPSList.Schools[j].Paths[i].p_name+'</td><td>( '+Math.round(SPSList.Schools[j].Paths[i].s_latitude*100)/100+', '+Math.round(SPSList.Schools[j].Paths[i].s_longtitude*100)/100+' )</td><td>( '+Math.round(SPSList.Schools[j].Paths[i].e_latitude*100)/100+',  '+Math.round(SPSList.Schools[j].Paths[i].e_longtitude*100)/100+' )</td><td>'+SPSList.Schools[j].sch_name+'</td><td>'+SPSList.Schools[j].Paths[i].num_block+'</td><td><input type="checkbox" class="check_path"></td></tr>';
                 };
                 tbl+='</tbody>';
                 $("#pthlist").html(tbl);
@@ -465,7 +465,7 @@
         </li>
         <li><a href="deployment.php">Deployment</a></li>
         <li><a href="export.php">Export</a></li>
-        <li><a href="">Log out</a></li>
+        <li><a href="../index.php">Log out</a></li>
         </ul></div>
       </nav>
   </nav>
@@ -504,7 +504,7 @@
               <div class="col-md-5"><select class="form-control" id="sch_mod"></select></div>
               <div class="col-md-2"><button type="button" class="btn btn-primary" id="del">Delete Path</button></div>
             </div><br>
-            <div><table class="table table-hover" id="plist"><thead><tr><th>Path Id</th><th>Path Name</th><th>Start Point</th><th>End Point</th><th>School Name</th><th><input type="checkbox" id="all"></th></tr></thead><tbody id="pthlist"></table></div>
+            <div><table class="table table-hover" id="plist"><thead><tr><th>Path Id</th><th>Path Name</th><th>Start Point</th><th>End Point</th><th>School Name</th><th>Num of Blocks</th><th><input type="checkbox" id="all"></th></tr></thead><tbody id="pthlist"></table></div>
       </div>
       <div class="tab-pane fade in" id="add">
         <div class="row"><br><br><br><br>
@@ -533,7 +533,7 @@
           <form role="form" class="form-horizontal">
             <div class="form-group">
             <label for="chg" class="col-md-2">Change Path Name</label>
-            <div class="col-md-6"><input type="text" class="form-control" id="chg" placeholder="New Path Name" align="left"></div>
+            <div class="col-md-4"><input type="text" class="form-control" id="chg" placeholder="New Path Name" align="left"></div>
             <div class="col-md-3"><button type="button" class="btn btn-primary" id="update">Update</button></div>
             </div>
           </form>

@@ -79,7 +79,7 @@
         </li>
         <li><a href="deployment.php">Deployment</a></li>
         <li><a href="export.php">Export</a></li>
-        <li><a href="">Log out</a></li>
+        <li><a href="../index.php">Log out</a></li>
         </ul></div>
       </nav>
   </nav>
@@ -87,11 +87,10 @@
     <div class="col-md-3">
     <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title">Survey Configuration</h3>
+      <h3 class="panel-title">Survey Export</h3>
     </div>
     <div class="panel-body">
       <p>In survey export part, administrators can export result data of a selected survey into a csv format file.</p>
-      <p><a class="btn btn-primary" role="button">Learn more</a></p>
     </div>
     </div>
     </div>

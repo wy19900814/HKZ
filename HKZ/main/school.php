@@ -33,7 +33,6 @@
       function get_school(){
         $.ajax({
             url:"get_data.php",
-            cache: false,
             dataType:"json",
             data:{list:"getList"},
             type:"POST",
@@ -128,7 +127,6 @@
           }
       });*/
       get_school();
-
       //tab transition
       $("#sch_tabs a").click(function(e){
         $(this).tab("show");
@@ -141,16 +139,20 @@
       $("#sch_tabs a[href='#view']").tab('show');
       $("#sch_tabs a[href='#view']").on('shown.bs.tab',function(e){
         init_school_list("#scl_view");
+        initialize("view_gm");
         if(schlist.Schools.length>0){
-          initialize("view_gm");
           $("#schs").html("<thead><tr><th>School Id</th><th>School Name</th><th>School Address</th></tr></thead><tr><td>"+schlist.Schools[0].sch_id+"</td><td>"+schlist.Schools[0].sch_name+"</td><td>"+schlist.Schools[0].sch_address+"</td></tr>");
         codeAddress(schlist.Schools[0].sch_address);
+        }else{
+          $("#schs").html("");
         } 
       });
       $("#sch_tabs a[href='#mod']").on('shown.bs.tab',function(e){
         init_school_list("#scl_mod");
         if(schlist.Schools.length>0){
           $("#schsm").html("<thead><tr><th>School Name</th><th>School Address</th><th><div class='col-md-10'>New School Name</div></th><th></th></tr></thead><tr><td>"+schlist.Schools[0].sch_name+"</td><td>"+schlist.Schools[0].sch_address+"</td><td><div class='col-md-10'><input type='text' class='form-control' id='newnm'></div></td><td><button class='btn btn-primary' id='sub_change'>Update</button></td></tr>");
+        }else{
+          $("#schsm").html("");
         }
       });
       $("#sch_tabs a[href='#delete']").on('shown.bs.tab',function(e){
@@ -228,24 +230,28 @@
    }); 
 
    $("#scl_del").on('click','.del',function(){
-      var selected=$(this).closest("td");
+      selected='';slid='';
+      selected=$(this).closest("td");
+      //alert(typeof selected+","+typeof selected.siblings(":nth-child(1)"));
+      //alert(selected.siblings(":nth-child(1)").text());
       $("#alrmodal").find("p").text("Do you really want to delete the school "+selected.siblings(":nth-child(2)").text()+" ?");
       $("#alrmodal").modal('show');
       $(document).on("click","#sub_del",function(){
-       // alert(selected.siblings(":nth-child(1)").text());
+        slid=selected.siblings(":nth-child(1)").text();
+        //alert("current:"+slid);
         $.ajax({
           url:"school.php",
-          cache: false,
-          data:{sdid:selected.siblings(":nth-child(1)").text()},
+          data:{sdid:slid},
+          cache:false,
           type:"POST",
           async:false
         }); 
         <?php if(isset($_POST['sdid'])){school_delete($_POST['sdid']);} ?>
-        get_school();
+       get_school();
        $("#alrmodal").modal('hide');
        $("#sch_tabs a[href='#delete']").trigger('shown.bs.tab');
       });
-     });
+    });
 }) 
 </script>
 
@@ -269,7 +275,7 @@
         </li>
         <li><a href="deployment.php">Deployment</a></li>
         <li><a href="export.php">Export</a></li>
-        <li><a href="">Log out</a></li>
+        <li><a href="../index.php">Log out</a></li>
         </ul></div>
       </nav>
   </nav>
@@ -381,4 +387,4 @@
   </div>
 </div>
 <noscript></body>
-</html>
+</html> 

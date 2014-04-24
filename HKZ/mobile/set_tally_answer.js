@@ -21,10 +21,16 @@ function getTallyQues(tallyQuesIndex){
 		}
 	}
 	var page = "<div data-role='page' data-url=TallyQuesUrl_"+tallyQuesIndex+"_"+survey_index+"_"+path_index+"_"+school_index+" data-theme='c' id='TallyQuesUrl_"+tallyQuesIndex+"_"+survey_index+"_"+path_index+"_"+school_index+"'><div data-role='header' data-theme='b'><a href='#' data-theme='b' data-icon='back' class='ui-btn-left' id='previous_ques'>back</a><h1>" + "Tally" + "</h1><a href='#' data-theme='b' data-icon='forward' class='ui-btn-right' id='next_ques'>next</a></div><div data-role='content'>";  
+
 	page=page+"<label for='tallyQues"+tallyQuesIndex+"'><h3>"+tally_ques[tallyQuesIndex].q_heading+'</h3></label>';
-	page=page+" <a href=\"#\" data-role=\"button\" data-icon=\"plus\"  data-theme=\"b\"  data-inline=\"true\" id='plus_"+tallyQuesIndex+"'>Plus</a><input type='number' style='width:100%;' data-clear-btn='false' value=";
+    if(tally_ques[tallyQuesIndex].image!=""){
+        page=page+'<img src="'+tally_ques[tallyQuesIndex].image+'" width=100% height=50%>';
+    }
+    
+
+	page=page+" <a href=\"#\" data-role=\"button\" data-icon=\"plus\"  data-theme=\"b\"   id='plus_"+tallyQuesIndex+"'>Plus</a><input type='number' style='width:100%;text-align:center;' data-clear-btn='false' value=";
 	page=page+option_ans;
-	page=page+" data-inline=\"true\" id='tallyQues"+tallyQuesIndex+"'/><a href=\"#\" id='minus_"+tallyQuesIndex+"' data-role=\"button\" data-icon=\"minus\" data-theme=\"b\" data-iconshadow=\"false\" data-inline=\"true\">Minus</a>";
+	page=page+" data-inline=\"true\" id='tallyQues"+tallyQuesIndex+"'/><a href=\"#\" id='minus_"+tallyQuesIndex+"' data-role=\"button\" data-icon=\"minus\" data-theme=\"b\" data-iconshadow=\"false\">Minus</a>";
 	page = page + "</div>";
     page=add_navbar(page);
     page+="</div>";
@@ -83,8 +89,8 @@ function getTallyQues(tallyQuesIndex){
     		getTallyQues(tallyQuesIndex);
     	}else{
     		tallyQuesIndex=0;
-    		alert("The following is other questions!")
-            $("#Tally").css("color","red");
+    		alert("The following is other questions!");
+            setTallyAndFontRed();
             getOtherQues(0);
                 
     		
@@ -110,7 +116,24 @@ function getTallyQues(tallyQuesIndex){
     });
 
 }
-
+function setTallyAndFontRed(){
+    var json_answer_str=localStorage.getItem("json_answer_str");
+    var json_answer=JSON.parse(json_answer_str);
+    var count=0;
+    //alert(json_answer_str);
+    for(var qi=0;qi<json_answer.Answers.length;qi++){
+        if(json_answer.Answers[qi].block_id==0&&json_answer.Answers[qi].a_content!=""&&json_answer.Answers[qi].a_content!="undefined"){
+            count++;
+        }
+    }
+    if(count==json_question.Questions.Others.length+json_question.Questions.Tallies.length){
+        $("#Tally").css("color","red");
+        $("#Other").css("color","red");
+    }else{
+        $("#Tally").css("color","black");
+        $("#Other").css("color","black");
+    }
+}
 function setTallyAnswer(tallyQuesIndex,block_id,answer,p_id){
     var searchStr='{"q_id":"'+json_question.Questions.Tallies[tallyQuesIndex].q_id+'","block_id":"'+block_id;
     var json_answer_str=localStorage.getItem("json_answer_str");

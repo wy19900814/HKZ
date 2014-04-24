@@ -63,27 +63,7 @@
           init_dep+='<option value='+DBList.DBSurvey[m].s_id+'>'+DBList.DBSurvey[m].s_name+'</option>';
         }
       }
-    /*  for(var m=0;m<DBList.DBSurvey.length;m++){
-        read[m]=0;
-        for(var j=0;j<SPSList.Schools.length;j++){
-          if(SPSList.Schools[j].Paths.length>0 && read[m]==0){
-            for(var i=0;i<SPSList.Schools[j].Paths.length;i++){
-              if(SPSList.Schools[j].Paths[i].Surveys.length>0 && read[m]==0){
-                for(var k=0;k<SPSList.Schools[j].Paths[i].Surveys.length;k++){
-                  if(SPSList.Schools[j].Paths[i].Surveys[k].s_id==DBList.DBSurvey[m].s_id && read[m]==0){
-                    if(DBList.DBSurvey[m].deployed==0){
-                      init_undep+='<option value='+DBList.DBSurvey[m].s_id+'>'+DBList.DBSurvey[m].s_name+'</option>';
-                    }else{
-                      init_dep+='<option value='+DBList.DBSurvey[m].s_id+'>'+DBList.DBSurvey[m].s_name+'</option>';
-                    }
-                    read[m]=1;
-                  } 
-                }
-              }
-            }
-          }
-        }
-      } */
+    
       $("#undep").html(init_undep);$("#dep").html(init_dep);
     };
 
@@ -95,48 +75,6 @@
       }); */
       get_deployment();
       init_surveys();
-
-  /*  $("#sch").change(function(){
-        init='<option value=-1></option>';
-        j=find_sch("#sch");
-        //alert($("#sch option:selected").val());
-        if($("#sch option:selected").val()!=-1){
-            for(var i=0;i<SPSList.Schools[j].Paths.length;i++){
-              chk_pth=0;
-              if(SPSList.Schools[j].Paths[i].Surveys.length>0){
-                count=0;
-                for(var k=0;k<SPSList.Schools[j].Paths[i].Surveys.length;k++){
-                  for(var m=0;m<DBList.DBSurvey.length;m++){
-                    if(SPSList.Schools[j].Paths[i].Surveys[k].s_id==DBList.DBSurvey[m].s_id && DBList.DBSurvey[m].deployed==1){count++;}
-                  }
-                }
-                if(count<SPSList.Schools[j].Paths[i].Surveys.length){chk_pth=1;}
-              }
-              if(chk_pth){
-                init+='<option value='+SPSList.Schools[j].Paths[i].p_id+'>'+SPSList.Schools[j].Paths[i].p_name+'</option>';
-              }
-            }
-        }else{init_surveys("#undep",0);}
-        $('#pth').html(init);
-      });
-
-    $("#pth").change(function(){
-        init_surveys("#dep",1);
-        j=find_sch("#sch");i=find_path(j,"#pth");
-        init_undep='';count=[];
-        if($("#pth option:selected").val()!=-1){
-            for(var k=0;k<SPSList.Schools[j].Paths[i].Surveys.length;k++){
-              chk=0;
-              for(var m=0;m<DBList.DBSurvey.length;m++){
-                if(SPSList.Schools[j].Paths[i].Surveys[k].s_id==DBList.DBSurvey[m].s_id && DBList.DBSurvey[m].deployed==0){chk=1;break;}
-              }
-              if(chk){
-                init_undep+='<option value='+SPSList.Schools[j].Paths[i].Surveys[k].s_id+'>'+SPSList.Schools[j].Paths[i].Surveys[k].s_name+'</option>';
-              }
-            }
-          $("#undep").html(init_undep);
-        }else{init_surveys("#undep",0);}  
-    }); */
  
     $("#mov").click(function(){
         if($("#undep option:selected").val()==undefined){
@@ -197,7 +135,7 @@
           </li>
           <li><a href="deployment.php">Deployment</a></li>
           <li><a href="export.php">Export</a></li>
-          <li><a href="">Log out</a></li>
+          <li><a href="../index.php">Log out</a></li>
         </ul></div>
         </nav>
       </nav>
