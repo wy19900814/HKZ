@@ -45,8 +45,6 @@ $('#directions_map').live('pageshow', function() {
 
 
 function reset(){
-    jsonObj_sps=null;
-    jsonObj_ques=null;
     school_index=null;
     path_index=null;
     survey_index=null;
@@ -57,6 +55,8 @@ function reset(){
     localStorage.setItem('json_sps_str',"");
     localStorage.setItem('json_question_str',"");
     localStorage.setItem('json_answer_str',"");
+    json_marker_str="{\"Markers\":[]}";
+    localStorage.setItem("json_marker_str",json_marker_str);
 
 }
 
@@ -258,7 +258,7 @@ function submit(){
        
         
         //http://letsallgetcovered.org/HKZ/store_answers_to_db.php
-        var url="http://letsallgetcovered.org/lets6502/hkz_v1/main/post_answer_and_marker.php";
+        var url="http://letsallgetcovered.org/hkz/main/post_answer_and_marker.php";
 
         json_answer_str=localStorage.getItem('json_answer_str');
         json_marker_str=localStorage.getItem('json_marker_str');

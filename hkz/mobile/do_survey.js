@@ -1,9 +1,14 @@
-var json_sps=null;
-var json_question=null;
-var school_index=null;
-var path_index=null;
-var survey_index=null;
-var json_answer_str="";
+var json_sps;
+var json_question;
+var school_index;
+var path_index;
+var survey_index;
+var json_answer_str;
+var json_marker_str;
+
+//alert("hh");
+var json_marker;
+
 function onload(){
 	document.addEventListener("deviceready", onDeviceReady, false); 
 }
@@ -13,6 +18,8 @@ function onDeviceReady() {
 function eventBackButton(){alert("Please press the back button on the screen");}
 
 function getNewSurvey(){
+    reset();
+
     var survey_index=localStorage.getItem('survey_index');
     //alert(survey_index);
     //alert(localStorage.getItem('ss'));
@@ -76,7 +83,7 @@ function getSchools(){
         json_answer_str=localStorage.getItem('json_answer_str');
     }
 	//var url="http://localhost/mobile/part3/test2.php?jsoncallback=?";
-	var url="http://letsallgetcovered.org/lets6502/hkz_v1/main/request_sps.php?jsoncallback=?";
+	var url="http://letsallgetcovered.org/hkz/main/request_sps.php?jsoncallback=?";
 
 	//var url="http://localhost/mobile/part3/sps.php"
 
@@ -85,6 +92,7 @@ function getSchools(){
 		localStorage.setItem('json_sps_str',JSON.stringify(json_sps));
     
 		var page="<div data-role='page' id='schoolUrl' data-url=schoolUrl data-theme='c' data-rel='back' ><div data-role='header' data-theme='b'><a href='#' data-theme='b' data-icon='back' class='ui-btn-left' id='back_to_homepage'>back</a><h1>" + "School List" + "</h1></div><div data-role='content'><ul data-role='listview' data-inset='false' id='school-list'>";
+        //alert(JSON.stringify(json_sps));
 		if(json_sps.Schools.length<1){
 			alert("Sorry, there is no school!!");
 			return;
@@ -101,7 +109,10 @@ function getSchools(){
 			}
 			if(flag){
 				page+='<li><a href="javascript:void(0)" onclick="getPaths(\'' + i + '\')">' + json_sps.Schools[i].sch_name + '</a></li>';
-			}
+			}else{
+                alert("Sorry, please deploy surveys with paths!!");
+                return;
+            }
 			flag=false;
 		}
 		page+="</ul></div>";
@@ -253,7 +264,7 @@ function getCatagory(sur_index){
 	var num_b=json_sps.Schools[school_index].Paths[path_index].num_block;
 	localStorage.setItem('block_number',num_b);
 	var page = "<div data-role='page' id='catagoryUrl_"+survey_index+"_"+path_index+"_"+school_index+"' data-url=catagoryUrl_"+survey_index+"_"+path_index+"_"+school_index+" data-theme='c'><div data-role='header' data-theme='b'><a href='#' data-theme='b' data-icon='back' class='ui-btn-left' id='back_to_surveys_list'>back</a><h1>" + "Catagory" + "</h1></div><div data-role='content'><ul data-role='listview' data-inset='false' id='survey-list'>";  
-    var url="http://letsallgetcovered.org/lets6502/hkz_v1/main/request_questions.php?jsoncallback=?";
+    var url="http://letsallgetcovered.org/hkz/main/request_questions.php?jsoncallback=?";
 
     var survey_id=json_sps.Schools[school_index].Paths[path_index].Surveys[survey_index].s_id;
     localStorage.setItem('survey_id',survey_id);

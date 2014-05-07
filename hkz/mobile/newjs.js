@@ -1,7 +1,4 @@
-var json_marker_str;
-json_marker_str="{\"Markers\":[]}";
-localStorage.setItem("json_marker_str",json_marker_str);
-var json_marker=null;
+
 $('#page-map').live("pageinit", function() {
 	$.blockUI({ css: {
         border: 'none', 
@@ -14,6 +11,11 @@ $('#page-map').live("pageinit", function() {
     } }); 
 
     setTimeout($.unblockUI, 500); 
+
+    if(localStorage.getItem('json_marker_str')==""||localStorage.getItem('json_marker_str')==null){
+        json_marker_str="{\"Markers\":[]}";
+        localStorage.setItem("json_marker_str",json_marker_str);
+    }
     //$('#map_canvas').gmap().bind('init', function(evt, map) { 
                                                                                                                                                                                                                                
     //});
@@ -32,7 +34,7 @@ $('#page-map').live("pageinit", function() {
                 var path=json_sps.Schools[school_index].Paths[path_index];
                 var s_latlng = path.s_latitude+','+path.s_longtitude;
                 var e_latlng = path.e_latitude+','+path.e_longtitude;
-               
+                //alert(localStorage.getItem('json_marker_str'));
                 $('#map_canvas').gmap('displayDirections', { 'origin': s_latlng, 'destination': e_latlng, 'travelMode': google.maps.DirectionsTravelMode.WALKING }, { 'panel': document.getElementById('panel') }, function(result, status) {
                     if ( status === 'OK' ) {
                         var marker_id;
@@ -298,8 +300,6 @@ $('#page-map').live("pageinit", function() {
             //save as json
             operate_str(marker,"replace");
             
-           // alert(json_marker_str);
-            
             data = {title: 	(($('#tag' + markerId).val() !== "") ? $('#tag' + markerId).val() : ('Marker ' + markerId)),
             	    position:	String(marker.getPosition()),
             	    comment:	 $('#comment'+ markerId).val(),
@@ -342,9 +342,11 @@ function operate_str(marker,operation){
     //alert(one_marker_str);
     var part_str="{\"m_latitude\":\""+m_latitude+"\",\"m_longtitude\":\""+m_longtitude+"\",\"s_id\":\""+s_id+"\",\"p_id\":\""+p_id+"\"";
     json_marker_str=localStorage.getItem("json_marker_str");
-   // alert(json_marker_str);
+    
+    //alert("old"+json_marker_str);
+    
     json_marker=JSON.parse(json_marker_str);
-    alert(json_marker_str);
+    //alert(json_marker_str);
     if(operation=="replace"){
         if(json_marker_str.search(part_str)==-1){
             json_marker_str=joinStr(json_marker_str,one_marker_str);
@@ -356,13 +358,11 @@ function operate_str(marker,operation){
                     var replace_one_marker_str="{\"m_latitude\":\""+m_latitude+"\",\"m_longtitude\":\""+m_longtitude+"\",\"s_id\":\""+s_id+"\",\"p_id\":\""+p_id+"\",\"comment\":\""+json_marker.Markers[i].comment+"\",\"title\":\""+json_marker.Markers[i].title+"\"}";
                     //alert(replace_one_marker_str);
                    // alert(one_marker_str);//new answer
-                    json_marker_str=json_marker_str.replace(replace_one_marker_str,one_marker_str);
                     
+                    json_marker_str=json_marker_str.replace(replace_one_marker_str,one_marker_str);
                 }
             }      
         }
-        
-        localStorage.setItem("json_marker_str",json_marker_str);
     }else if(operation=="remove"){
         
         if(json_marker_str.search(part_str)!=-1){
@@ -397,8 +397,9 @@ function operate_str(marker,operation){
         }else{
             alert("error");
         }
-        localStorage.setItem("json_marker_str",json_marker_str);
+        
     }
-    alert(json_marker_str);
+    localStorage.setItem("json_marker_str",json_marker_str);
+    //alert(json_marker_str);
         
 }
