@@ -1,0 +1,11 @@
+HKZ Version 1
+
+/hkz/main all the front-end and back-end code of HKZ website.
+/hkz/mobile all the jquery mobile code of HKZ Mobile App.
+
+The data schema of our database is in SSAD.
+
+Besides the code, we also need HKZ Survey Monkey account and HKZ Godaddy Webserver account.
+We also have a MySQL Database on Godaddy.
+
+The installation procedure is in User Manual.
